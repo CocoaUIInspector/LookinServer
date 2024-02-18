@@ -114,10 +114,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 #pragma mark - No Encode/Decode
 
-/// 该 item 在左侧 hierarchy 中显示的字符串，通常是类名
-- (NSString *)title;
-- (NSString *)subtitle;
-
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> previewItemDelegate;
 @property(nonatomic, weak) id<LookinDisplayItemDelegate> rowViewDelegate;
 
@@ -129,9 +125,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 /// 在 hierarchy 中的层级，比如顶层的 UIWindow.indentLevel 为 0，UIWindow 的 subitem 的 indentLevel 为 1
 - (NSInteger)indentLevel;
-
-/// className 以 “UI”、“CA” 等开头时认为是系统类，该属性将返回 YES
-@property(nonatomic, assign, readonly) BOOL representedForSystemClass;
 
 /**
  该项是否被展开
@@ -153,9 +146,6 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
  */
 @property(nonatomic, assign, readonly) BOOL inHiddenHierarchy;
 
-/// 返回 soloScreenshot 或 groupScreenshot
-- (LookinImage *)appropriateScreenshot;
-
 @property(nonatomic, assign) LookinDisplayItemImageEncodeType screenshotEncodeType;
 
 /// Whether to fetch screenshot and why. Default to LookinFetchScreenshotPermitted.
@@ -175,30 +165,15 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 当小于 0 时表示未被设置
 @property(nonatomic, assign) NSInteger previewZIndex;
 
-/// 遍历自身和所有上级元素
-- (void)enumerateSelfAndAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-- (void)enumerateAncestors:(void (^)(LookinDisplayItem *item, BOOL *stop))block;
-
-/// 遍历自身后所有下级元素
-- (void)enumerateSelfAndChildren:(void (^)(LookinDisplayItem *item))block;
-
 @property(nonatomic, assign) BOOL preferToBeCollapsed;
 
 - (void)notifySelectionChangeToDelegates;
 - (void)notifyHoverChangeToDelegates;
 
-- (BOOL)itemIsKindOfClassWithName:(NSString *)className;
-- (BOOL)itemIsKindOfClassesWithNames:(NSSet<NSString *> *)classNames;
-
 /// 根据 subItems 属性将 items 打平为一维数组
 + (NSArray<LookinDisplayItem *> *)flatItemsFromHierarchicalItems:(NSArray<LookinDisplayItem *> *)items;
 
 @property(nonatomic, assign) BOOL hasDeterminedExpansion;
-
-/// 在 string 这个搜索词下，如果该 displayItem 应该被搜索到，则该方法返回 YES。
-/// string 字段不能为 nil 或空字符串
-- (BOOL)isMatchedWithSearchString:(NSString *)string;
 
 /// 设置当前是否处于搜索状态
 @property(nonatomic, assign) BOOL isInSearch;
