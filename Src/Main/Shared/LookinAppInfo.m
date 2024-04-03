@@ -11,6 +11,7 @@
 
 
 #import "LookinAppInfo.h"
+#import "MultiplatformAdapter.h"
 
 static NSString * const CodingKey_AppIcon = @"1";
 static NSString * const CodingKey_Screenshot = @"2";
@@ -152,7 +153,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     info.appBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([self isSimulator]) {
         info.deviceType = LookinAppInfoDeviceSimulator;
-    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    } else if ([MultiplatformAdapter isiPad]) {
         info.deviceType = LookinAppInfoDeviceIPad;
     } else {
         info.deviceType = LookinAppInfoDeviceOthers;
@@ -163,10 +164,10 @@ static NSString * const CodingKey_DeviceType = @"8";
     NSString *mainVersionStr = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."].firstObject;
     info.osMainVersion = [mainVersionStr integerValue];
     
-    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    CGSize screenSize = [MultiplatformAdapter mainScreenBounds].size;
     info.screenWidth = screenSize.width;
     info.screenHeight = screenSize.height;
-    info.screenScale = [UIScreen mainScreen].scale;
+    info.screenScale = [MultiplatformAdapter mainScreenScale];
 
     if (hasScreenshot) {
         info.screenshot = [self screenshotImage];
@@ -199,7 +200,7 @@ static NSString * const CodingKey_DeviceType = @"8";
 }
 
 + (UIImage *)screenshotImage {
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [MultiplatformAdapter keyWindow];
     if (!window) {
         return nil;
     }

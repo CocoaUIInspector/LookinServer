@@ -11,11 +11,13 @@
 #import "UIViewController+LookinServer.h"
 #import "UIView+LookinServer.h"
 #import <objc/runtime.h>
+#import "MultiplatformAdapter.h"
 
 @implementation UIViewController (LookinServer)
 
 + (nullable UIViewController *)lks_visibleViewController {
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    UIViewController *rootViewController = [MultiplatformAdapter keyWindow].rootViewController;
     UIViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];
     return visibleViewController;
 }
