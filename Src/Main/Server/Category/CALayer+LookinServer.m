@@ -16,7 +16,7 @@
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
-#import "MultiplatformAdapter.h"
+#import "LKS_MultiplatformAdapter.h"
 
 @implementation CALayer (LookinServer)
 
@@ -61,7 +61,7 @@
 
 - (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
-    CGFloat screenScale = [MultiplatformAdapter mainScreenScale];
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
     CGFloat pixelWidth = self.frame.size.width * screenScale;
     CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {
@@ -98,7 +98,7 @@
         return nil;
     }
     
-    CGFloat screenScale = [MultiplatformAdapter mainScreenScale];
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
     CGFloat pixelWidth = self.frame.size.width * screenScale;
     CGFloat pixelHeight = self.frame.size.height * screenScale;
     if (pixelWidth <= 0 || pixelHeight <= 0) {

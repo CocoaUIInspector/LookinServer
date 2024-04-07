@@ -16,7 +16,7 @@
 #import "LookinIvarTrace.h"
 #import "LookinServerDefines.h"
 #import "LKS_GestureTargetActionsSearcher.h"
-#import "MultiplatformAdapter.h"
+#import "LKS_MultiplatformAdapter.h"
 
 @implementation LKS_EventHandlerMaker
 

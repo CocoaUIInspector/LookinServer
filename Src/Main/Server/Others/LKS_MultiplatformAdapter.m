@@ -1,16 +1,15 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 //
-//  MultiplatformAdapter.m
+//  LKS_MultiplatformAdapter.m
 //  
 //
 //  Created by nixjiang on 2024/3/12.
 //
 
-
-
-#import "MultiplatformAdapter.h"
+#import "LKS_MultiplatformAdapter.h"
 #import <UIKit/UIKit.h>
 
-@implementation MultiplatformAdapter
+@implementation LKS_MultiplatformAdapter
 
 + (BOOL)isiPad {
     static BOOL s_isiPad = NO;
@@ -26,7 +25,7 @@
 
 + (CGRect)mainScreenBounds {
 #if TARGET_OS_VISION
-    return [MultiplatformAdapter getFirstActiveWindowScene].coordinateSpace.bounds;
+    return [LKS_MultiplatformAdapter getFirstActiveWindowScene].coordinateSpace.bounds;
 #else
     return [UIScreen mainScreen].bounds;
 #endif
@@ -40,6 +39,7 @@
 #endif
 }
 
+#if TARGET_OS_VISION
 + (UIWindowScene *)getFirstActiveWindowScene {
     for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
         if (![scene isKindOfClass:UIWindowScene.class]) {
@@ -52,6 +52,7 @@
     }
     return nil;
 }
+#endif
 
 + (UIWindow *)keyWindow {
 #if TARGET_OS_VISION
@@ -87,3 +88,5 @@
 }
 
 @end
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */

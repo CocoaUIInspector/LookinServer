@@ -1,5 +1,6 @@
+#ifdef SHOULD_COMPILE_LOOKIN_SERVER
 //
-//  MultiplatformAdapter.h
+//  LKS_MultiplatformAdapter.h
 //  
 //
 //  Created by nixjiang on 2024/3/12.
@@ -10,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MultiplatformAdapter : NSObject
+@interface LKS_MultiplatformAdapter : NSObject
 
 + (UIWindow *)keyWindow;
 
@@ -25,3 +26,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif /* SHOULD_COMPILE_LOOKIN_SERVER */
