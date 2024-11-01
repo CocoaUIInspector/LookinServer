@@ -102,15 +102,14 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     if (@available(iOS 14.0, *)) {
         // isiOSAppOnMac 这个 API 看似在 iOS 14.0 上可用，但其实在 iOS 14 beta 上是不存在的、有 unrecognized selector 问题，因此这里要用 respondsToSelector 做一下保护
         NSProcessInfo *info = [NSProcessInfo processInfo];
-        if ([info respondsToSelector:@selector(isiOSAppOnMac)]) {
-            return [info isiOSAppOnMac];
-        } else if ([info respondsToSelector:@selector(isMacCatalystApp)]) {
-            return [info isMacCatalystApp];
+        if ([info respondsToSelector:@selector(isiOSAppOnMac)] && [info isiOSAppOnMac]) {
+            return YES;
+        } else if ([info respondsToSelector:@selector(isMacCatalystApp)] && [info isMacCatalystApp]) {
+            return YES;
         } else {
             return NO;
         }
-    }
-    if (@available(iOS 13.0, tvOS 13.0, *)) {
+    } else if (@available(iOS 13.0, tvOS 13.0, *)) {
         return [NSProcessInfo processInfo].isMacCatalystApp;
     }
     return NO;
