@@ -11,7 +11,7 @@
 #import "LookinDisplayItemDetail.h"
 #import "Image+Lookin.h"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import "UIImage+LookinServer.h"
 #endif
 

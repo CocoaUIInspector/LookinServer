@@ -9,7 +9,7 @@
 //
 
 #import "TargetConditionals.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
 #import <Appkit/Appkit.h>
@@ -140,7 +140,7 @@ enum {
 
 #pragma mark - Colors
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #define LookinColor UIColor
 #define LookinInsets UIEdgeInsets
 #define LookinImage UIImage

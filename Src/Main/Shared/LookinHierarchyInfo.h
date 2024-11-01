@@ -12,7 +12,7 @@
 
 #import "LookinDefines.h"
 #import "TargetConditionals.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
 #import <Appkit/Appkit.h>
@@ -22,7 +22,7 @@
 
 @interface LookinHierarchyInfo : NSObject <NSSecureCoding, NSCopying>
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 
 /// version 可能为 nil，此时说明 Client 版本号 < 1.0.4
 + (instancetype)staticInfoWithLookinVersion:(NSString *)version;

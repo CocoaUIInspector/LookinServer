@@ -62,7 +62,7 @@
         return @"nil";
     }
     
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
     UIColor *rgbColor = color;
 #elif TARGET_OS_MAC
     NSColor *rgbColor = [color colorUsingColorSpace:NSColorSpace.sRGBColorSpace];

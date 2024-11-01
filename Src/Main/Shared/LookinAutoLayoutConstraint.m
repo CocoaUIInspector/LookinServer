@@ -15,7 +15,7 @@
 
 @implementation LookinAutoLayoutConstraint
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 
 + (instancetype)instanceFromNSConstraint:(NSLayoutConstraint *)constraint isEffective:(BOOL)isEffective firstItemType:(LookinConstraintItemType)firstItemType secondItemType:(LookinConstraintItemType)secondItemType {
     LookinAutoLayoutConstraint *instance = [LookinAutoLayoutConstraint new];

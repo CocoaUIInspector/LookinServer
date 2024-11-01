@@ -8,7 +8,7 @@
 //
 
 #import "LookinCustomDisplayItemInfo.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import <UIKit/UIKit.h>
 #endif
 
@@ -18,7 +18,7 @@
     LookinCustomDisplayItemInfo *newInstance = [[LookinCustomDisplayItemInfo allocWithZone:zone] init];
     
     if (self.frameInWindow) {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
         CGRect rect = [self.frameInWindow CGRectValue];
         newInstance.frameInWindow = [NSValue valueWithCGRect:rect];
 #elif TARGET_OS_MAC

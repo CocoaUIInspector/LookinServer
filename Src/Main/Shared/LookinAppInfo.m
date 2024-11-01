@@ -71,7 +71,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeObject:self.serverReadableVersion forKey:@"serverReadableVersion"];
     [aCoder encodeInt:self.swiftEnabledInLookinServer forKey:@"swiftEnabledInLookinServer"];
     
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
     NSData *screenshotData = UIImagePNGRepresentation(self.screenshot);
     [aCoder encodeObject:screenshotData forKey:CodingKey_Screenshot];
     
@@ -129,7 +129,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     return NO;
 }
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 
 + (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers {
     NSInteger selfIdentifier = [self getAppInfoIdentifier];

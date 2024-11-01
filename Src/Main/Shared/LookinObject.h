@@ -16,7 +16,7 @@
 
 @interface LookinObject : NSObject <NSSecureCoding, NSCopying>
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 + (instancetype)instanceWithObject:(NSObject *)object;
 #endif
 

@@ -115,7 +115,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
 }
 
 - (void)lookin_bindPoint:(CGPoint)pointValue forKey:(NSString *)key {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
     [self lookin_bindObject:[NSValue valueWithCGPoint:pointValue] forKey:key];
 #elif TARGET_OS_MAC
     NSPoint nsPoint = NSMakePoint(pointValue.x, pointValue.y);
@@ -126,7 +126,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
 - (CGPoint)lookin_getBindPointForKey:(NSString *)key {
     id object = [self lookin_getBindObjectForKey:key];
     if ([object isKindOfClass:[NSValue class]]) {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
         CGPoint pointValue = [(NSValue *)object CGPointValue];
 #elif TARGET_OS_MAC
         NSPoint nsPointValue = [(NSValue *)object pointValue];
@@ -150,7 +150,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
     if (type == LookinCodingValueTypeColor) {
         if ([self isKindOfClass:[LookinColor class]]) {
             CGFloat r, g, b, a;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
             CGFloat white;
             if ([(UIColor *)self getRed:&r green:&g blue:&b alpha:&a]) {
                 // valid
@@ -178,7 +178,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
         }
         
     } else if (type == LookinCodingValueTypeImage) {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
         if ([self isKindOfClass:[UIImage class]]) {
             UIImage *image = (UIImage *)self;
             return UIImagePNGRepresentation(image);

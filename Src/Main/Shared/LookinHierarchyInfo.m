@@ -16,7 +16,7 @@
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import "LKS_HierarchyDisplayItemsMaker.h"
 #import "LKSConfigManager.h"
 #import "LKS_CustomAttrSetterManager.h"
@@ -24,7 +24,7 @@
 
 @implementation LookinHierarchyInfo
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 
 + (instancetype)staticInfoWithLookinVersion:(NSString *)version {
     BOOL readCustomInfo = NO;
