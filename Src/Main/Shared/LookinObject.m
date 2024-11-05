@@ -12,22 +12,9 @@
 #import "LookinIvarTrace.h"
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
-#import "NSObject+LookinServer.h"
 
 @implementation LookinObject
 
-+ (instancetype)instanceWithObject:(NSObject *)object {
-    LookinObject *lookinObj = [LookinObject new];
-    lookinObj.oid = [object lks_registerOid];
-    
-    lookinObj.memoryAddress = [NSString stringWithFormat:@"%p", object];
-    lookinObj.classChainList = [object lks_classChainList];
-    
-    lookinObj.specialTrace = object.lks_specialTrace;
-    lookinObj.ivarTraces = object.lks_ivarTraces;
-    
-    return lookinObj;
-}
 
 #pragma mark - <NSCopying>
 

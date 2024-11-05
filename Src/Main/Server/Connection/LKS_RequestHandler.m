@@ -27,6 +27,8 @@
 #import "LKS_HierarchyDetailsHandler.h"
 #import "LookinStaticAsyncUpdateTask.h"
 #import "NSValue+Lookin.h"
+#import "LookinHierarchyInfo+LookinServer.h"
+#import "LookinObject+LookinServer.h"
 
 @interface LKS_RequestHandler ()
 

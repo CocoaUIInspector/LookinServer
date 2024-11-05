@@ -14,7 +14,7 @@
 #import "LookinAutoLayoutConstraint.h"
 #import "LookinServerDefines.h"
 #import "LKS_MultiplatformAdapter.h"
-
+#import "LookinAutoLayoutConstraint+LookinServer.h"
 @implementation LookinView (LookinServer)
 
 #if TARGET_OS_OSX

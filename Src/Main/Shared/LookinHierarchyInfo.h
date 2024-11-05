@@ -22,10 +22,7 @@
 
 @interface LookinHierarchyInfo : NSObject <NSSecureCoding, NSCopying>
 
-/// version 可能为 nil，此时说明 Client 版本号 < 1.0.4
-+ (instancetype)staticInfoWithLookinVersion:(NSString *)version;
 
-+ (instancetype)exportedInfo;
 
 /// 这里其实就是顶端的那几个 UIWindow
 @property(nonatomic, copy) NSArray<LookinDisplayItem *> *displayItems;

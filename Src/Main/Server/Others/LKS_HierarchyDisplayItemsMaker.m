@@ -21,6 +21,8 @@
 #import "LKS_CustomAttrSetterManager.h"
 #import "LKS_MultiplatformAdapter.h"
 #import "NSValue+Lookin.h"
+#import "LookinObject+LookinServer.h"
+
 @implementation LKS_HierarchyDisplayItemsMaker
 
 + (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality readCustomInfo:(BOOL)readCustomInfo saveCustomSetter:(BOOL)saveCustomSetter {

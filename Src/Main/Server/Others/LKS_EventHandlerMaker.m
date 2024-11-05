@@ -200,7 +200,10 @@
 #endif
     
 #if TARGET_OS_OSX
-    NSSet *allTargets = control.target;
+    NSMutableSet *allTargets = [NSMutableSet set];
+    if (control.target) {
+        [allTargets addObject:control.target];
+    }
 #endif
     
     if (!allTargets.count) {

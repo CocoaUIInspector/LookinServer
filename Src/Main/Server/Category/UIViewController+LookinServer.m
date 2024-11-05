@@ -56,7 +56,7 @@
 #if TARGET_OS_OSX
     if (self.presentedViewControllers) {
         for (NSViewController *presentedViewController in self.presentedViewControllers) {
-            return [self.presentingViewController lks_visibleViewControllerIfExist];
+            return [presentedViewController lks_visibleViewControllerIfExist];
         }
     }
     

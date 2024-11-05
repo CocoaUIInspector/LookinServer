@@ -16,7 +16,6 @@
 
 @interface LookinObject : NSObject <NSSecureCoding, NSCopying>
 
-+ (instancetype)instanceWithObject:(NSObject *)object;
 
 @property(nonatomic, assign) unsigned long oid;
 
