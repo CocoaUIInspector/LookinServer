@@ -22,6 +22,9 @@
 @interface LKS_CustomDisplayItemsMaker : NSObject
 
 - (instancetype)initWithLayer:(CALayer *)layer saveAttrSetter:(BOOL)saveAttrSetter;
+#if TARGET_OS_OSX
+- (instancetype)initWithView:(NSView *)view saveAttrSetter:(BOOL)saveAttrSetter;
+#endif
 
 - (NSArray<LookinDisplayItem *> *)make;
 

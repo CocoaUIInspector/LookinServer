@@ -246,9 +246,7 @@ NSString *const LKS_ConnectionDidEndNotificationName = @"LKS_ConnectionDidEndNot
     UIViewController *rootViewController = [keyWindow rootViewController];
     [rootViewController presentViewController:alertController animated:YES completion:nil];
     
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = @"Lookin";
     alert.informativeText = @"Failed to run local inspection. The feature has been removed. Please use the computer version of Lookin or consider SDKs like FLEX for similar functionality.";

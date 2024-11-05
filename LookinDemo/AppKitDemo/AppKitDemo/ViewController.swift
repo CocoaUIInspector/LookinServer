@@ -11,7 +11,7 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print(view.layer)
         // Do any additional setup after loading the view.
     }
 
@@ -22,5 +22,12 @@ class ViewController: NSViewController {
     }
 
 
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        print(view.layer)
+        print(view.superview?.layer)
+    }
+    
 }
 

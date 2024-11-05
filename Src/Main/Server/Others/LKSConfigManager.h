@@ -26,7 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary<NSString *, LookinColor *> *)colorAlias;
 
 + (BOOL)shouldCaptureScreenshotOfLayer:(CALayer *)layer;
-
+#if TARGET_OS_OSX
++ (BOOL)shouldCaptureScreenshotOfView:(NSView *)view;
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

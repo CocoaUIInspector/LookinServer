@@ -114,19 +114,24 @@
                             [UIPinchGestureRecognizer class],
                             [UITapGestureRecognizer class]];
 #elif TARGET_OS_OSX
-        baseRecognizers = @[
-                            [NSClickGestureRecognizer class],
+        baseRecognizers = @[[NSClickGestureRecognizer class],
                             [NSMagnificationGestureRecognizer class],
                             [NSPanGestureRecognizer class],
                             [NSPressGestureRecognizer class],
-                            [NSRotationGestureRecognizer class],
-        ];
+                            [NSRotationGestureRecognizer class]];
 #else
+        baseRecognizers = @[];
 #endif
 
     });
     
+#if TARGET_OS_IPHONE
     __block NSString *result = @"UIGestureRecognizer";
+#elif TARGET_OS_OSX
+    __block NSString *result = @"NSGestureRecognizer";
+#endif
+    
+    
     [baseRecognizers enumerateObjectsUsingBlock:^(Class  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([recognizer isMemberOfClass:obj]) {
             // 自身就是基本款，则直接置为 nil
@@ -152,8 +157,7 @@
         if (@available(iOS 9.0, *)) {
             allEvents = [allEvents arrayByAddingObject:@(UIControlEventPrimaryActionTriggered)];
         }
-#endif
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
         allEvents = @[
             @(NSEventMaskLeftMouseDown),
             @(NSEventMaskLeftMouseUp),
@@ -197,9 +201,7 @@
 
 #if TARGET_OS_IPHONE
     NSSet *allTargets = control.allTargets;
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     NSMutableSet *allTargets = [NSMutableSet set];
     if (control.target) {
         [allTargets addObject:control.target];
@@ -235,15 +237,13 @@
             [handlers addObject:handler];
         }
     }];
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     if (control.target && control.action) {
         NSEventMask eventMask = [[control valueForKeyPath:@"cell.sendActionOnMask"] unsignedIntegerValue];
         LookinEventHandler *handler = [LookinEventHandler new];
         handler.handlerType = LookinEventHandlerTypeTargetAction;
         handler.eventName = [self _nameFromEventMask:eventMask];
-        handler.targetActions = @[[LookinStringTwoTuple tupleWithFirst:control.target second:NSStringFromSelector(control.action)]];
+        handler.targetActions = @[[LookinStringTwoTuple tupleWithFirst:[LKS_Helper descriptionOfObject:control.target] second:NSStringFromSelector(control.action)]];
         [handlers addObject:handler];
     }
 #endif
@@ -281,9 +281,7 @@
     NSString *name = eventsAndNames[@(event)];
     return name;
 }
-#endif
-
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
 + (NSString *)_nameFromEventMask:(NSEventMask)eventMask {
     static dispatch_once_t onceToken;
     static NSDictionary<NSNumber *, NSString *> *eventsAndNames = nil;

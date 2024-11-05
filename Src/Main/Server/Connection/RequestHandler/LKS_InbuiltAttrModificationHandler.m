@@ -235,6 +235,23 @@
         LookinDisplayItemDetail *itemDetail = [LookinDisplayItemDetail new];
         itemDetail.displayItemOid = task.oid;
         id object = [NSObject lks_objectWithOid:task.oid];
+        
+#if TARGET_OS_OSX
+        NSView *view = object;
+        if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
+            if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
+                LookinImage *image = [view lks_soloScreenshotWithLowQuality:NO];
+                itemDetail.soloScreenshot = image;
+            } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
+                LookinImage *image = [view lks_groupScreenshotWithLowQuality:NO];
+                itemDetail.groupScreenshot = image;
+            }
+            block(itemDetail);
+            return;
+        }
+#endif
+        
+        
         if (!object || ![object isKindOfClass:[CALayer class]]) {
             block(itemDetail);
             return;

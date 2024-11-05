@@ -71,13 +71,13 @@ static NSString * const CodingKey_DeviceType = @"8";
     [aCoder encodeObject:self.serverReadableVersion forKey:@"serverReadableVersion"];
     [aCoder encodeInt:self.swiftEnabledInLookinServer forKey:@"swiftEnabledInLookinServer"];
     
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
     NSData *screenshotData = UIImagePNGRepresentation(self.screenshot);
     [aCoder encodeObject:screenshotData forKey:CodingKey_Screenshot];
     
     NSData *appIconData = UIImagePNGRepresentation(self.appIcon);
     [aCoder encodeObject:appIconData forKey:CodingKey_AppIcon];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     NSData *screenshotData = [self.screenshot TIFFRepresentation];
     [aCoder encodeObject:screenshotData forKey:CodingKey_Screenshot];
     
@@ -153,7 +153,7 @@ static NSString * const CodingKey_DeviceType = @"8";
 #endif
     
 #if TARGET_OS_OSX
-    info.deviceDescription = [NSProcessInfo processInfo].hostName;
+    info.deviceDescription = [NSHost currentHost].localizedName;
 #endif
     info.appBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([self isSimulator]) {
@@ -168,11 +168,14 @@ static NSString * const CodingKey_DeviceType = @"8";
     info.osDescription = [UIDevice currentDevice].systemVersion;
     NSString *mainVersionStr = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."].firstObject;
     info.osMainVersion = [mainVersionStr integerValue];
-#endif
-    
-#if TARGET_OS_OSX
-    info.osDescription = [NSProcessInfo processInfo].operatingSystemVersionString;
-    info.osMainVersion = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion;
+#elif TARGET_OS_OSX
+    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    if (operatingSystemVersion.patchVersion) {
+        info.osDescription = [NSString stringWithFormat:@"macOS %ld.%ld.%ld", operatingSystemVersion.majorVersion, operatingSystemVersion.minorVersion, operatingSystemVersion.patchVersion];
+    } else {
+        info.osDescription = [NSString stringWithFormat:@"macOS %ld.%ld", operatingSystemVersion.majorVersion, operatingSystemVersion.minorVersion];
+    }
+    info.osMainVersion = operatingSystemVersion.majorVersion;
 #endif
 
     
@@ -239,10 +242,8 @@ static NSString * const CodingKey_DeviceType = @"8";
     [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-#endif
-    
-#if TARGET_OS_OSX
-    NSView *view = window.contentView;
+#elif TARGET_OS_OSX
+    NSView *view = window.contentView.superview;
     if (!window || !view) {
         return nil;
     }

@@ -88,6 +88,77 @@
     return groups;
 }
 
+#if TARGET_OS_OSX
++ (NSArray<LookinAttributesGroup *> *)attrGroupsForView:(NSView *)view {
+    if (!view) {
+        NSAssert(NO, @"");
+        return nil;
+    }
+    NSArray<LookinAttributesGroup *> *groups = [[LookinDashboardBlueprint groupIDs] lookin_map:^id(NSUInteger idx, LookinAttrGroupIdentifier groupID) {
+        LookinAttributesGroup *group = [LookinAttributesGroup new];
+        group.identifier = groupID;
+
+        NSArray<LookinAttrSectionIdentifier> *secIDs = [LookinDashboardBlueprint sectionIDsForGroupID:groupID];
+        group.attrSections = [secIDs lookin_map:^id(NSUInteger idx, LookinAttrSectionIdentifier secID) {
+            LookinAttributesSection *sec = [LookinAttributesSection new];
+            sec.identifier = secID;
+            
+            NSArray<LookinAttrIdentifier> *attrIDs = [LookinDashboardBlueprint attrIDsForSectionID:secID];
+            sec.attributes = [attrIDs lookin_map:^id(NSUInteger idx, LookinAttrIdentifier attrID) {
+                NSInteger minAvailableVersion = [LookinDashboardBlueprint minAvailableOSVersionWithAttrID:attrID];
+                if (minAvailableVersion > 0 && (NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < minAvailableVersion)) {
+                    // iOS 版本过低不支持该属性
+                    return nil;
+                }
+                
+                id targetObj = nil;
+                if ([LookinDashboardBlueprint isUIViewPropertyWithAttrID:attrID]) {
+                    targetObj = view;
+                } else {
+                    targetObj = view.layer;
+                }
+                
+                if (targetObj) {
+                    Class targetClass = NSClassFromString([LookinDashboardBlueprint classNameWithAttrID:attrID]);
+                    if (![targetObj isKindOfClass:targetClass]) {
+                        return nil;
+                    }
+                    
+                    LookinAttribute *attr = [self _attributeWithIdentifer:attrID targetObject:targetObj];
+                    return attr;
+                } else {
+                    return nil;
+                }
+            }];
+            
+            if (sec.attributes.count) {
+                return sec;
+            } else {
+                return nil;
+            }
+        }];
+        
+        if ([groupID isEqualToString:LookinAttrGroup_AutoLayout]) {
+            // 这里特殊处理一下，如果 AutoLayout 里面不包含 Constraints 的话（只有 Hugging 和 Resistance），就丢弃掉这整个 AutoLayout 不显示
+            BOOL hasConstraits = [group.attrSections lookin_any:^BOOL(LookinAttributesSection *obj) {
+                return [obj.identifier isEqualToString:LookinAttrSec_AutoLayout_Constraints];
+            }];
+            if (!hasConstraits) {
+                return nil;
+            }
+        }
+        
+        if (group.attrSections.count) {
+            return group;
+        } else {
+            return nil;
+        }
+    }];
+    
+    return groups;
+}
+#endif
+
 + (LookinAttribute *)_attributeWithIdentifer:(LookinAttrIdentifier)identifier targetObject:(id)target {
     if (!target) {
         NSAssert(NO, @"");

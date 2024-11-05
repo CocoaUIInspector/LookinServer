@@ -8,14 +8,13 @@
 //  https://lookin.work
 //
 
-#import "LookinDefines.h"
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#endif
-
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
 #import <AppKit/AppKit.h>
 #endif
+
+#import "LookinDefines.h"
 
 @interface LookinView (LookinServer)
 
@@ -44,6 +43,12 @@
 @property(nonatomic, strong) NSMutableArray<NSLayoutConstraint *> *lks_involvedRawConstraints;
 
 - (NSArray<NSDictionary<NSString *, id> *> *)lks_constraints;
+
+#if TARGET_OS_OSX
+- (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality;
+/// 当没有 sublayers 时，该方法返回 nil
+- (LookinImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality;
+#endif
 
 @end
 

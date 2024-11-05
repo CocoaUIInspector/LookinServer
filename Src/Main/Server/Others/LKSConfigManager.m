@@ -121,6 +121,25 @@
     return YES;
 }
 
+#if TARGET_OS_OSX
++ (BOOL)shouldCaptureScreenshotOfView:(NSView *)view {
+    if (!view) {
+        return YES;
+    }
+    if (![self shouldCaptureImageOfView:view]) {
+        return NO;
+    }
+    CALayer *layer = view.layer;
+    if (!layer) {
+        return YES;
+    }
+    if (![self shouldCaptureImageOfLayer:layer]) {
+        return NO;
+    }
+    return YES;
+}
+#endif
+
 + (BOOL)shouldCaptureImageOfLayer:(CALayer *)layer {
     if (!layer) {
         return YES;

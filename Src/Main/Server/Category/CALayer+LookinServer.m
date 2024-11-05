@@ -17,7 +17,7 @@
 #import "LookinServerDefines.h"
 #import "UIColor+LookinServer.h"
 #import "LKS_MultiplatformAdapter.h"
-
+#import "NSWindow+LookinServer.h"
 @implementation CALayer (LookinServer)
 
 - (LookinWindow *)lks_window {
@@ -26,8 +26,10 @@
         LookinView *hostView = layer.lks_hostView;
         if (hostView.window) {
             return hostView.window;
+#if !TARGET_OS_OSX
         } else if ([hostView isKindOfClass:[LookinWindow class]]) {
             return (LookinWindow *)hostView;
+#endif
         }
         layer = layer.superlayer;
     }
@@ -43,11 +45,10 @@
 #if TARGET_OS_IPHONE
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
-#endif
+#elif TARGET_OS_OSX
     
-#if TARGET_OS_OSX
-    CGRect rectInSelfWindow = [selfWindow.contentView.layer convertRect:self.frame fromLayer:self.superlayer];
-    CGRect rectInWindow = [window.contentView convertRect:rectInSelfWindow fromView:selfWindow.contentView];
+    CGRect rectInSelfWindow = [selfWindow.lks_rootView.layer convertRect:self.frame fromLayer:self.superlayer];
+    CGRect rectInWindow = [window.lks_rootView convertRect:rectInSelfWindow fromView:selfWindow.lks_rootView];
 #endif
     return rectInWindow;
 }
@@ -99,9 +100,7 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
         CGContextRef context = NSGraphicsContext.currentContext.CGContext;
         [self renderInContext:context];
@@ -159,9 +158,7 @@
         UIGraphicsEndImageContext();
         
         
-#endif
-        
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
         NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
             CGContextRef context = NSGraphicsContext.currentContext.CGContext;
             [self renderInContext:context];
@@ -189,9 +186,7 @@
         [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
     }
     return array.copy;
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
     if (self.lks_hostView) {
         [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"NSView"]];

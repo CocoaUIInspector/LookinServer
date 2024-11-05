@@ -15,6 +15,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_MultiplatformAdapter.h"
 #import "LookinAutoLayoutConstraint+LookinServer.h"
+#import "NSWindow+LookinServer.h"
 @implementation LookinView (LookinServer)
 
 #if TARGET_OS_OSX
@@ -85,9 +86,7 @@
 - (CGSize)lks_bestSize {
 #if TARGET_OS_IPHONE
     return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
-#endif
-    
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
     if ([self isKindOfClass:[NSControl class]]) {
         return [((NSControl *)self) sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
     } else {
@@ -143,19 +142,15 @@
     [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
 #if TARGET_OS_IPHONE
         [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window];
-#endif
-        
-#if TARGET_OS_OSX
-        [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window.contentView];
+#elif TARGET_OS_OSX
+        [self lks_removeInvolvedRawConstraintsForViewsRootedByView:window.lks_rootView];
 #endif
     }];
     [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
 #if TARGET_OS_IPHONE
         [self lks_addInvolvedRawConstraintsForViewsRootedByView:window];
-#endif
-        
-#if TARGET_OS_OSX
-        [self lks_addInvolvedRawConstraintsForViewsRootedByView:window.contentView];
+#elif TARGET_OS_OSX
+        [self lks_addInvolvedRawConstraintsForViewsRootedByView:window.lks_rootView];
 #endif
     }];
 }
@@ -244,10 +239,13 @@
         }
     }
     
+    
+#if TARGET_OS_IPHONE
     NSString *className = NSStringFromClass([item class]);
     if ([className hasSuffix:@"_UILayoutGuide"]) {
         return LookinConstraintItemTypeLayoutGuide;
     }
+#endif
     
     if ([item isKindOfClass:[LookinView class]]) {
         return LookinConstraintItemTypeView;
@@ -255,6 +253,97 @@
     
     NSAssert(NO, @"");
     return LookinConstraintItemTypeUnknown;
+}
+
+#pragma mark - Screenshot
+
+- (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
+    
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
+        return nil;
+    }
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
+    }
+    
+    CGSize contextSize = self.frame.size;
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+        return nil;
+    }
+    
+    NSBitmapImageRep *rep = [self bitmapImageRepForCachingDisplayInRect:self.bounds];
+    if (!rep) {
+        return nil;
+    }
+    [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
+    
+    NSImage *image = [[NSImage alloc] initWithSize:self.bounds.size];
+    
+    [image addRepresentation:rep];
+    
+    return image;
+}
+
+- (LookinImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
+    if (!self.subviews.count) {
+        return nil;
+    }
+    
+    CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
+    CGFloat pixelWidth = self.frame.size.width * screenScale;
+    CGFloat pixelHeight = self.frame.size.height * screenScale;
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
+        return nil;
+    }
+    
+    CGFloat renderScale = lowQuality ? 1 : 0;
+    CGFloat maxLength = MAX(pixelWidth, pixelHeight);
+    if (maxLength > LookinNodeImageMaxLengthInPx) {
+        // 确保最终绘制出的图片长和宽都不能超过 LookinNodeImageMaxLengthInPx
+        // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
+        renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
+    }
+    
+    if (self.subviews.count) {
+        NSArray<NSView *> *subviews = [self.subviews copy];
+        NSMutableArray<NSView *> *visibleSubviews = [NSMutableArray arrayWithCapacity:subviews.count];
+        [subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!subview.hidden) {
+                subview.hidden = YES;
+                [visibleSubviews addObject:subview];
+            }
+        }];
+        
+        CGSize contextSize = self.frame.size;
+        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+            return nil;
+        }
+
+        NSBitmapImageRep *rep = [self bitmapImageRepForCachingDisplayInRect:self.bounds];
+        if (!rep) {
+            return nil;
+        }
+        [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
+        
+        NSImage *image = [[NSImage alloc] initWithSize:self.bounds.size];
+        
+        [image addRepresentation:rep];
+        [visibleSubviews enumerateObjectsUsingBlock:^(NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            subview.hidden = NO;
+        }];
+        return image;
+    }
+    return nil;
 }
 
 @end

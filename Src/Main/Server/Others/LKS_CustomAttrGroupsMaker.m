@@ -26,11 +26,23 @@
 @property(nonatomic, copy) NSString *resolvedDanceUISource;
 @property(nonatomic, strong) NSMutableArray *resolvedGroups;
 
+#if TARGET_OS_OSX
+@property(nonatomic, weak) NSView *view;
+#endif
 @property(nonatomic, weak) CALayer *layer;
-
 @end
 
 @implementation LKS_CustomAttrGroupsMaker
+
+#if TARGET_OS_OSX
+- (instancetype)initWithView:(NSView *)view {
+    if (self = [super init]) {
+        self.sectionAndAttrs = [NSMutableDictionary dictionary];
+        self.view = view;
+    }
+    return self;
+}
+#endif
 
 - (instancetype)initWithLayer:(CALayer *)layer {
     if (self = [super init]) {
@@ -41,10 +53,17 @@
 }
 
 - (void)execute {
+#if TARGET_OS_IPHONE
     if (!self.layer) {
         NSAssert(NO, @"");
         return;
     }
+#elif TARGET_OS_OSX
+    if (!self.view && !self.layer) {
+        NSAssert(NO, @"");
+        return;
+    }
+#endif
     NSMutableArray<NSString *> *selectors = [NSMutableArray array];
     [selectors addObject:@"lookin_customDebugInfos"];
     for (int i = 0; i < 5; i++) {
@@ -52,11 +71,21 @@
     }
     
     for (NSString *name in selectors) {
-        [self makeAttrsForViewOrLayer:self.layer selectorName:name];
-        
-        LookinView *view = self.layer.lks_hostView;
-        if (view) {
-            [self makeAttrsForViewOrLayer:view selectorName:name];
+        if (self.view && !self.view.layer) {
+            [self makeAttrsForViewOrLayer:self.view selectorName:name];
+            CALayer *layer = self.view.layer;
+            if (layer) {
+                [self makeAttrsForViewOrLayer:layer selectorName:name];
+            }
+            continue;
+        }
+        if (self.layer) {
+            [self makeAttrsForViewOrLayer:self.layer selectorName:name];
+            
+            LookinView *view = self.layer.lks_hostView;
+            if (view) {
+                [self makeAttrsForViewOrLayer:view selectorName:name];
+            }
         }
     }
     
