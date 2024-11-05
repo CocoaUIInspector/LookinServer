@@ -129,7 +129,6 @@ static NSString * const CodingKey_DeviceType = @"8";
     return NO;
 }
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 
 + (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers {
     NSInteger selfIdentifier = [self getAppInfoIdentifier];
@@ -149,7 +148,13 @@ static NSString * const CodingKey_DeviceType = @"8";
 #endif
     info.appInfoIdentifier = selfIdentifier;
     info.appName = [self appName];
+#if TARGET_OS_IPHONE
     info.deviceDescription = [UIDevice currentDevice].name;
+#endif
+    
+#if TARGET_OS_OSX
+    info.deviceDescription = [NSProcessInfo processInfo].hostName;
+#endif
     info.appBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([self isSimulator]) {
         info.deviceType = LookinAppInfoDeviceSimulator;
@@ -159,10 +164,17 @@ static NSString * const CodingKey_DeviceType = @"8";
         info.deviceType = LookinAppInfoDeviceOthers;
     }
     
+#if TARGET_OS_IPHONE
     info.osDescription = [UIDevice currentDevice].systemVersion;
-    
     NSString *mainVersionStr = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."].firstObject;
     info.osMainVersion = [mainVersionStr integerValue];
+#endif
+    
+#if TARGET_OS_OSX
+    info.osDescription = [NSProcessInfo processInfo].operatingSystemVersionString;
+    info.osMainVersion = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion;
+#endif
+
     
     CGSize screenSize = [LKS_MultiplatformAdapter mainScreenBounds].size;
     info.screenWidth = screenSize.width;
@@ -186,10 +198,10 @@ static NSString * const CodingKey_DeviceType = @"8";
     return displayName.length ? displayName : name;
 }
 
-+ (UIImage *)appIcon {
++ (LookinImage *)appIcon {
 #if TARGET_OS_TV
     return nil;
-#else
+#elif TARGET_OS_IPHONE
     NSString *imageName;
     id CFBundleIcons = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"];
     if ([CFBundleIcons respondsToSelector:@selector(objectForKey:)]) {
@@ -205,14 +217,17 @@ static NSString * const CodingKey_DeviceType = @"8";
         return nil;
     }
     return [UIImage imageNamed:imageName];
+#elif TARGET_OS_OSX
+    return [[NSApplication sharedApplication] applicationIconImage];
 #endif
 }
 
-+ (UIImage *)screenshotImage {
-    UIWindow *window = [LKS_MultiplatformAdapter keyWindow];
++ (LookinImage *)screenshotImage {
+    LookinWindow *window = [LKS_MultiplatformAdapter keyWindow];
     if (!window) {
         return nil;
     }
+#if TARGET_OS_IPHONE
     CGSize size = window.bounds.size;
     if (size.width <= 0 || size.height <= 0) {
         // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UIGraphicsBeginImageContext() failed to allocate CGBitampContext: size={0, 0}, scale=3.000000, bitmapInfo=0x2002. Use UIGraphicsImageRenderer to avoid this assert.'
@@ -224,6 +239,34 @@ static NSString * const CodingKey_DeviceType = @"8";
     [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+#endif
+    
+#if TARGET_OS_OSX
+    NSView *view = window.contentView;
+    if (!window || !view) {
+        return nil;
+    }
+    
+    NSRect rect = view.bounds;
+    rect = [view convertRect:rect toView:nil];
+    rect = [window convertRectToScreen:rect];
+    
+// Adjust for titlebar; kTitleUtility = 16, kTitleNormal = 22
+#define kTitleUtility 16
+#define kTitleNormal 22
+    
+    CGFloat delta = ([window styleMask] & NSWindowStyleMaskUtilityWindow) ? kTitleUtility : kTitleNormal;
+    rect.origin.y += delta;
+    rect.size.height += delta * 2;
+    
+    CGImageRef cgImage = CGWindowListCreateImage(rect,
+                                                 kCGWindowListOptionIncludingWindow,
+                                                 (CGWindowID)[window windowNumber],
+                                                 kCGWindowImageBestResolution);
+    
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:rect.size];
+    CGImageRelease(cgImage);
+#endif
     
     return image;
 }
@@ -235,7 +278,6 @@ static NSString * const CodingKey_DeviceType = @"8";
     return NO;
 }
 
-#endif
 
 + (NSInteger)getAppInfoIdentifier {
     static dispatch_once_t onceToken;

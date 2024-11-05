@@ -46,7 +46,7 @@
     for (NSString *name in selectors) {
         [self makeSubitemsForViewOrLayer:self.layer selectorName:name];
         
-        UIView *view = self.layer.lks_hostView;
+        LookinView *view = self.layer.lks_hostView;
         if (view) {
             [self makeSubitemsForViewOrLayer:view selectorName:name];
         }
@@ -63,7 +63,7 @@
     if (!viewOrLayer || !selectorName.length) {
         return;
     }
-    if (![viewOrLayer isKindOfClass:[UIView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
+    if (![viewOrLayer isKindOfClass:[LookinView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
         return;
     }
     SEL selector = NSSelectorFromString(selectorName);

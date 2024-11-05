@@ -8,9 +8,17 @@
 //  https://lookin.work
 //
 
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
 
-@interface UIColor (LookinServer)
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
+
+#import "LookinDefines.h"
+
+@interface LookinColor (LookinServer)
 
 - (NSArray<NSNumber *> *)lks_rgbaComponents;
 + (instancetype)lks_colorFromRGBAComponents:(NSArray<NSNumber *> *)components;
@@ -19,7 +27,7 @@
 - (NSString *)lks_hexString;
 
 /// will check if the argument is a real CGColor
-+ (UIColor *)lks_colorWithCGColor:(CGColorRef)cgColor;
++ (LookinColor *)lks_colorWithCGColor:(CGColorRef)cgColor;
 
 @end
 

@@ -16,7 +16,7 @@
 #import "LookinIvarTrace.h"
 #import "UIColor+LookinServer.h"
 #import "LookinServerDefines.h"
-
+#import "NSValue+Lookin.h"
 @implementation LKS_AttrGroupsMaker
 
 + (NSArray<LookinAttributesGroup *> *)attrGroupsForLayer:(CALayer *)layer {
@@ -251,18 +251,18 @@
         attribute.attrType = LookinAttrTypeCGAffineTransform;
         attribute.value = [NSValue valueWithCGAffineTransform:targetValue];
         
-    } else if (strcmp(returnType, @encode(UIEdgeInsets)) == 0) {
-        UIEdgeInsets targetValue;
+    } else if (strcmp(returnType, @encode(LookinInsets)) == 0) {
+        LookinInsets targetValue;
         [invocation getReturnValue:&targetValue];
         attribute.attrType = LookinAttrTypeUIEdgeInsets;
-        attribute.value = [NSValue valueWithUIEdgeInsets:targetValue];
-        
+        attribute.value = [NSValue valueWithEdgeInsets:targetValue];
+#if !TARGET_OS_OSX
     } else if (strcmp(returnType, @encode(UIOffset)) == 0) {
         UIOffset targetValue;
         [invocation getReturnValue:&targetValue];
         attribute.attrType = LookinAttrTypeUIOffset;
         attribute.value = [NSValue valueWithUIOffset:targetValue];
-        
+#endif
     } else {
         NSString *argType_string = [[NSString alloc] lookin_safeInitWithUTF8String:returnType];
         if ([argType_string hasPrefix:@"@"]) {
@@ -278,7 +278,7 @@
             if (attribute.attrType == LookinAttrTypeUIColor) {
                 if (returnObjValue == nil) {
                     attribute.value = nil;
-                } else if ([returnObjValue isKindOfClass:[UIColor class]] && [returnObjValue respondsToSelector:@selector(lks_rgbaComponents)]) {
+                } else if ([returnObjValue isKindOfClass:[LookinColor class]] && [returnObjValue respondsToSelector:@selector(lks_rgbaComponents)]) {
                     attribute.value = [returnObjValue lks_rgbaComponents];
                 } else {
                     // https://github.com/QMUI/LookinServer/issues/124

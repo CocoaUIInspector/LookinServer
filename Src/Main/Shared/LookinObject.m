@@ -12,14 +12,10 @@
 #import "LookinIvarTrace.h"
 #import "NSArray+Lookin.h"
 #import "NSString+Lookin.h"
-
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 #import "NSObject+LookinServer.h"
-#endif
 
 @implementation LookinObject
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
 + (instancetype)instanceWithObject:(NSObject *)object {
     LookinObject *lookinObj = [LookinObject new];
     lookinObj.oid = [object lks_registerOid];
@@ -32,7 +28,6 @@
     
     return lookinObj;
 }
-#endif
 
 #pragma mark - <NSCopying>
 

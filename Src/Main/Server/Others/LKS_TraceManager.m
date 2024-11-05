@@ -75,13 +75,20 @@
         [self _markIVarsInAllClassLevelsOfObject:obj.object];
     }];
     
-    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+#if TARGET_OS_IPHONE
         [self _addTraceForLayersRootedByLayer:window.layer];
+#endif
+        
+#if TARGET_OS_OSX
+        [self _addTraceForInterfaceObject:window];
+#endif
     }];
 }
 
+#if TARGET_OS_IPHONE
 - (void)_addTraceForLayersRootedByLayer:(CALayer *)layer {
-    UIView *view = layer.lks_hostView;
+    LookinView *view = layer.lks_hostView;
     
     if ([view.superview lks_isChildrenViewOfTabBar]) {
         view.lks_isChildrenViewOfTabBar = YES;
@@ -91,7 +98,7 @@
     
     if (view) {
         [self _markIVarsInAllClassLevelsOfObject:view];
-        UIViewController* vc = [view lks_findHostViewController];
+        LookinViewController* vc = [view lks_findHostViewController];
         if (vc) {
             [self _markIVarsInAllClassLevelsOfObject:vc];
         }
@@ -105,14 +112,46 @@
         [self _addTraceForLayersRootedByLayer:sublayer];
     }];
 }
+#endif
 
-- (void)_buildSpecialTraceForView:(UIView *)view {
-    UIViewController* vc = [view lks_findHostViewController];
+#if TARGET_OS_OSX
+- (void)_addTraceForInterfaceObject:(id)interfaceObject {
+//    LookinView *view = window.contentView;
+    
+    if ([interfaceObject isKindOfClass:[NSWindow class]]) {
+        [self _markIVarsInAllClassLevelsOfObject:interfaceObject];
+        NSWindow *window = interfaceObject;
+        if (window.contentView) {
+            [self _addTraceForInterfaceObject:window.contentView];
+        }
+    } else if ([interfaceObject isKindOfClass:[NSView class]]) {
+        NSView *view = interfaceObject;
+        [self _markIVarsInAllClassLevelsOfObject:view];
+        LookinViewController* vc = [view lks_findHostViewController];
+        if (vc) {
+            [self _markIVarsInAllClassLevelsOfObject:vc];
+        }
+        [self _buildSpecialTraceForView:view];
+        if (view.layer) {
+            [self _markIVarsInAllClassLevelsOfObject:view.layer];
+        }
+        [[view.subviews copy] enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self _addTraceForInterfaceObject:subview];
+        }];
+    }
+    
+
+}
+#endif
+
+- (void)_buildSpecialTraceForView:(LookinView *)view {
+    LookinViewController* vc = [view lks_findHostViewController];
     if (vc) {
         view.lks_specialTrace = [NSString stringWithFormat:@"%@.view", NSStringFromClass(vc.class)];
         
-    } else if ([view isKindOfClass:[UIWindow class]]) {
-        CGFloat currentWindowLevel = ((UIWindow *)view).windowLevel;
+#if !TARGET_OS_OSX
+    } else if ([view isKindOfClass:[LookinWindow class]]) {
+        CGFloat currentWindowLevel = ((LookinWindow *)view).windowLevel;
         
         if (((UIWindow *)view).isKeyWindow) {
             view.lks_specialTrace = [NSString stringWithFormat:@"KeyWindow ( Level: %@ )", @(currentWindowLevel)];
@@ -122,7 +161,7 @@
     } else if ([view isKindOfClass:[UITableViewCell class]]) {
         ((UITableViewCell *)view).backgroundView.lks_specialTrace = @"cell.backgroundView";
         ((UITableViewCell *)view).accessoryView.lks_specialTrace = @"cell.accessoryView";
-    
+        
     } else if ([view isKindOfClass:[UITableView class]]) {
         UITableView *tableView = (UITableView *)view;
         
@@ -144,31 +183,45 @@
             UIView *secFooterView = [tableView footerViewForSection:secIdx];
             secFooterView.lks_specialTrace = [NSString stringWithFormat:@"sectionFooter { sec: %@ }", @(secIdx)];
         }];
-        
-    } else if ([view isKindOfClass:[UICollectionView class]]) {
-        UICollectionView *collectionView = (UICollectionView *)view;
-        collectionView.backgroundView.lks_specialTrace = @"collectionView.backgroundView";
-        
-        if (@available(iOS 9.0, *)) {
-            [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:UICollectionElementKindSectionHeader] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
-                UIView *headerView = [collectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
-                headerView.lks_specialTrace = [NSString stringWithFormat:@"sectionHeader { sec:%@ }", @(indexPath.section)];
-            }];
-            [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:UICollectionElementKindSectionFooter] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
-                UIView *footerView = [collectionView supplementaryViewForElementKind:UICollectionElementKindSectionFooter atIndexPath:indexPath];
-                footerView.lks_specialTrace = [NSString stringWithFormat:@"sectionFooter { sec:%@ }", @(indexPath.section)];
-            }];
-        }
-        
-        [[collectionView visibleCells] enumerateObjectsUsingBlock:^(__kindof UICollectionViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
-            cell.lks_specialTrace = [NSString stringWithFormat:@"{ item:%@, sec:%@ }", @(indexPath.item), @(indexPath.section)];
-        }];
-        
     } else if ([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
         UITableViewHeaderFooterView *headerFooterView = (UITableViewHeaderFooterView *)view;
         headerFooterView.textLabel.lks_specialTrace = @"sectionHeaderFooter.textLabel";
         headerFooterView.detailTextLabel.lks_specialTrace = @"sectionHeaderFooter.detailTextLabel";
+#endif
+    } else if ([view isKindOfClass:[LookinCollectionView class]]) {
+        LookinCollectionView *collectionView = (LookinCollectionView *)view;
+        collectionView.backgroundView.lks_specialTrace = @"collectionView.backgroundView";
+#if TARGET_OS_IPHONE
+        if (@available(iOS 9.0, *)) {
+            [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:LookinCollectionElementKindSectionHeader] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
+                LookinView *headerView = [collectionView supplementaryViewForElementKind:LookinCollectionElementKindSectionHeader atIndexPath:indexPath];
+                headerView.lks_specialTrace = [NSString stringWithFormat:@"sectionHeader { sec:%@ }", @(indexPath.section)];
+            }];
+            [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:LookinCollectionElementKindSectionFooter] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
+                LookinView *footerView = [collectionView supplementaryViewForElementKind:LookinCollectionElementKindSectionFooter atIndexPath:indexPath];
+                footerView.lks_specialTrace = [NSString stringWithFormat:@"sectionFooter { sec:%@ }", @(indexPath.section)];
+            }];
+        }
+        [[collectionView visibleCells] enumerateObjectsUsingBlock:^(__kindof UICollectionViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
+            cell.lks_specialTrace = [NSString stringWithFormat:@"{ item:%@, sec:%@ }", @(indexPath.item), @(indexPath.section)];
+        }];
+#endif
+        
+#if TARGET_OS_OSX
+        [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:LookinCollectionElementKindSectionHeader] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, BOOL * _Nonnull stop) {
+            LookinView *headerView = [collectionView supplementaryViewForElementKind:LookinCollectionElementKindSectionHeader atIndexPath:indexPath];
+            headerView.lks_specialTrace = [NSString stringWithFormat:@"sectionHeader { sec:%@ }", @(indexPath.section)];
+        }];
+        [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:LookinCollectionElementKindSectionFooter] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, BOOL * _Nonnull stop) {
+            LookinView *footerView = [collectionView supplementaryViewForElementKind:LookinCollectionElementKindSectionFooter atIndexPath:indexPath];
+            footerView.lks_specialTrace = [NSString stringWithFormat:@"sectionFooter { sec:%@ }", @(indexPath.section)];
+        }];
+        [[collectionView visibleItems] enumerateObjectsUsingBlock:^(NSCollectionViewItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSIndexPath *indexPath = [collectionView indexPathForItem:item];
+            item.lks_specialTrace = [NSString stringWithFormat:@"{ item:%@, sec:%@ }", @(indexPath.item), @(indexPath.section)];
+        }];
+#endif
     }
 }
 
@@ -184,7 +237,7 @@
         return;
     }
 
-    NSArray<NSString *> *prefixesToTerminateRecursion = @[@"NSObject", @"UIResponder", @"UIButton", @"UIButtonLabel"];
+    NSArray<NSString *> *prefixesToTerminateRecursion = @[@"NSObject", @"UIResponder", @"UIButton", @"UIButtonLabel", @"NSResponder"];
     BOOL hasPrefix = [prefixesToTerminateRecursion lookin_any:^BOOL(NSString *prefix) {
         return [NSStringFromClass(targetClass) hasPrefix:prefix];
     }];
@@ -202,10 +255,10 @@
         }
         NSString *ivarClassName = [ivarType substringWithRange:NSMakeRange(2, ivarType.length - 3)];
         Class ivarClass = NSClassFromString(ivarClassName);
-        if (![ivarClass isSubclassOfClass:[UIView class]]
+        if (![ivarClass isSubclassOfClass:[LookinView class]]
             && ![ivarClass isSubclassOfClass:[CALayer class]]
-            && ![ivarClass isSubclassOfClass:[UIViewController class]]
-            && ![ivarClass isSubclassOfClass:[UIGestureRecognizer class]]) {
+            && ![ivarClass isSubclassOfClass:[LookinViewController class]]
+            && ![ivarClass isSubclassOfClass:[LookinGestureRecognizer class]]) {
             continue;
         }
         const char * ivarNameChar = ivar_getName(ivar);
@@ -225,14 +278,14 @@
         
         if (hostObject == ivarObject) {
             ivarTrace.relation = LookinIvarTraceRelationValue_Self;
-        } else if ([hostObject isKindOfClass:[UIView class]]) {
+        } else if ([hostObject isKindOfClass:[LookinView class]]) {
             CALayer *ivarLayer = nil;
             if ([ivarObject isKindOfClass:[CALayer class]]) {
                 ivarLayer = (CALayer *)ivarObject;
-            } else if ([ivarObject isKindOfClass:[UIView class]]) {
-                ivarLayer = ((UIView *)ivarObject).layer;
+            } else if ([ivarObject isKindOfClass:[LookinView class]]) {
+                ivarLayer = ((LookinView *)ivarObject).layer;
             }
-            if (ivarLayer && (ivarLayer.superlayer == ((UIView *)hostObject).layer)) {
+            if (ivarLayer && (ivarLayer.superlayer == ((LookinView *)hostObject).layer)) {
                 ivarTrace.relation = @"superview";
             }
         }
@@ -297,6 +350,31 @@ static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
         [set addObject:({
             LookinIvarTrace *trace = [LookinIvarTrace new];
             trace.hostClassName = @"UIViewController";
+            trace.ivarName = @"_parentViewController";
+            trace;
+        })];
+        
+        [set addObject:({
+            LookinIvarTrace *trace = [LookinIvarTrace new];
+            trace.hostClassName = @"NSView";
+            trace.ivarName = @"_window";
+            trace;
+        })];
+        [set addObject:({
+            LookinIvarTrace *trace = [LookinIvarTrace new];
+            trace.hostClassName = @"NSViewController";
+            trace.ivarName = @"_view";
+            trace;
+        })];
+        [set addObject:({
+            LookinIvarTrace *trace = [LookinIvarTrace new];
+            trace.hostClassName = @"NSView";
+            trace.ivarName = @"_viewDelegate";
+            trace;
+        })];
+        [set addObject:({
+            LookinIvarTrace *trace = [LookinIvarTrace new];
+            trace.hostClassName = @"NSViewController";
             trace.ivarName = @"_parentViewController";
             trace;
         })];

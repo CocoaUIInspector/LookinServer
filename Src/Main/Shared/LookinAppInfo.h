@@ -57,15 +57,9 @@ typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
 
 - (BOOL)isEqualToAppInfo:(LookinAppInfo *)info;
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
-
 + (LookinAppInfo *)currentInfoWithScreenshot:(BOOL)hasScreenshot icon:(BOOL)hasIcon localIdentifiers:(NSArray<NSNumber *> *)localIdentifiers;
 
-#else
-
 @property(nonatomic, assign) NSTimeInterval cachedTimestamp;
-
-#endif
 
 @end
 

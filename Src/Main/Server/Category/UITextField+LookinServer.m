@@ -8,6 +8,7 @@
 //  https://lookin.work
 //
 
+#if TARGET_OS_IPHONE
 #import "UITextField+LookinServer.h"
 
 @implementation UITextField (LookinServer)
@@ -25,5 +26,9 @@
 }
 
 @end
+#endif
+
+#if TARGET_OS_OSX
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

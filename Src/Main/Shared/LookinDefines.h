@@ -9,9 +9,9 @@
 //
 
 #import "TargetConditionals.h"
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
 #import <Appkit/Appkit.h>
 #endif
 
@@ -140,14 +140,44 @@ enum {
 
 #pragma mark - Colors
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 #define LookinColor UIColor
 #define LookinInsets UIEdgeInsets
 #define LookinImage UIImage
-#elif TARGET_OS_MAC
+#define LookinWindow UIWindow
+#define LookinApplication UIApplication
+#define LookinImageView UIImageView
+#define LookinView UIView
+#define LookinViewController UIViewController
+#define LookinFont UIFont
+#define LookinResponder UIResponder
+#define LookinLayoutConstraintAxisHorizontal UILayoutConstraintAxisHorizontal
+#define LookinLayoutConstraintAxisVertical UILayoutConstraintAxisVertical
+#define LookinLayoutGuide UILayoutGuide
+#define LookinGestureRecognizer UIGestureRecognizer
+#define LookinControl UIControl
+#define LookinCollectionView UICollectionView
+#define LookinCollectionElementKindSectionHeader UICollectionElementKindSectionHeader
+#define LookinCollectionElementKindSectionFooter UICollectionElementKindSectionFooter
+#elif TARGET_OS_OSX
 #define LookinColor NSColor
 #define LookinInsets NSEdgeInsets
 #define LookinImage NSImage
+#define LookinWindow NSWindow
+#define LookinApplication NSApplication
+#define LookinImageView NSImageView
+#define LookinView NSView
+#define LookinViewController NSViewController
+#define LookinFont NSFont
+#define LookinResponder NSResponder
+#define LookinLayoutConstraintAxisHorizontal NSLayoutConstraintOrientationHorizontal
+#define LookinLayoutConstraintAxisVertical NSLayoutConstraintOrientationVertical
+#define LookinLayoutGuide NSLayoutGuide
+#define LookinGestureRecognizer NSGestureRecognizer
+#define LookinControl NSControl
+#define LookinCollectionView NSCollectionView
+#define LookinCollectionElementKindSectionHeader NSCollectionElementKindSectionHeader
+#define LookinCollectionElementKindSectionFooter NSCollectionElementKindSectionFooter
 #endif
 
 #define LookinColorRGBAMake(r, g, b, a) [LookinColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]

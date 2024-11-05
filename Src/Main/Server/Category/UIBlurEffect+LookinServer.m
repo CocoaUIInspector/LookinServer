@@ -8,6 +8,8 @@
 //  https://lookin.work
 //
 
+#if TARGET_OS_IPHONE
+
 #import "UIBlurEffect+LookinServer.h"
 #import "NSObject+Lookin.h"
 #import <objc/runtime.h>
@@ -53,5 +55,7 @@
 #endif /* LOOKIN_SERVER_DISABLE_HOOK */
 
 @end
+
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

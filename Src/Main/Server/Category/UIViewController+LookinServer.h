@@ -8,11 +8,19 @@
 //  https://lookin.work
 //
 
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
 
-@interface UIViewController (LookinServer)
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
 
-+ (UIViewController *)lks_visibleViewController;
+#import "LookinDefines.h"
+
+@interface LookinViewController (LookinServer)
+
++ (LookinViewController *)lks_visibleViewController;
 
 @end
 

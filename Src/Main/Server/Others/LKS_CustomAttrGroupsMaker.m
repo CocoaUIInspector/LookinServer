@@ -54,7 +54,7 @@
     for (NSString *name in selectors) {
         [self makeAttrsForViewOrLayer:self.layer selectorName:name];
         
-        UIView *view = self.layer.lks_hostView;
+        LookinView *view = self.layer.lks_hostView;
         if (view) {
             [self makeAttrsForViewOrLayer:view selectorName:name];
         }
@@ -91,7 +91,7 @@
     if (!viewOrLayer || !selectorName.length) {
         return;
     }
-    if (![viewOrLayer isKindOfClass:[UIView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
+    if (![viewOrLayer isKindOfClass:[LookinView class]] && ![viewOrLayer isKindOfClass:[CALayer class]]) {
         return;
     }
     SEL selector = NSSelectorFromString(selectorName);
@@ -239,13 +239,13 @@
     }
     
     if ([fixedType isEqualToString:@"color"]) {
-        if (value != nil && ![value isKindOfClass:[UIColor class]]) {
+        if (value != nil && ![value isKindOfClass:[LookinColor class]]) {
             // nil 是合法的
             NSLog(@"LookinServer - Wrong value type.");
             return nil;
         }
         attr.attrType = LookinAttrTypeUIColor;
-        attr.value = [(UIColor *)value lks_rgbaComponents];
+        attr.value = [(LookinColor *)value lks_rgbaComponents];
         
         if (saveCustomSetter && dict[@"retainedSetter"]) {
             NSString *uniqueID = [[NSUUID new] UUIDString];
@@ -372,8 +372,8 @@
             @"opacity": shadowInfo[@"opacity"],
             @"radius": shadowInfo[@"radius"]
         } mutableCopy];
-        if ([shadowInfo[@"color"] isKindOfClass:[UIColor class]]) {
-            checkedShadowInfo[@"color"] = [(UIColor *)shadowInfo[@"color"] lks_rgbaComponents];
+        if ([shadowInfo[@"color"] isKindOfClass:[LookinColor class]]) {
+            checkedShadowInfo[@"color"] = [(LookinColor *)shadowInfo[@"color"] lks_rgbaComponents];
         }
         
         attr.attrType = LookinAttrTypeShadow;

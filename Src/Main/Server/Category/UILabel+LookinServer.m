@@ -10,6 +10,7 @@
 
 #import "UILabel+LookinServer.h"
 
+#if TARGET_OS_IPHONE
 @implementation UILabel (LookinServer)
 
 - (CGFloat)lks_fontSize {
@@ -25,5 +26,9 @@
 }
 
 @end
+#endif
+
+#if TARGET_OS_OSX
+#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

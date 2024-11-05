@@ -16,7 +16,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_CustomAttrGroupsMaker.h"
 #import "LKS_HierarchyDisplayItemsMaker.h"
-
+#import "NSValue+Lookin.h"
 @interface LKS_HierarchyDetailsHandler ()
 
 @property(nonatomic, strong) NSMutableArray<LookinStaticAsyncUpdateTasksPackage *> *taskPackages;
@@ -52,7 +52,7 @@
     self.progressBlock = progressBlock;
     self.finishBlock = finishBlock;
     
-    [UIView lks_rebuildGlobalInvolvedRawConstraints];
+    [LookinView lks_rebuildGlobalInvolvedRawConstraints];
     
     [self _dequeueAndHandlePackage];
 }
@@ -82,10 +82,10 @@
             CALayer *layer = object;
 
             if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
-                UIImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
+                LookinImage *image = [layer lks_soloScreenshotWithLowQuality:NO];
                 itemDetail.soloScreenshot = image;
             } else if (task.taskType == LookinStaticAsyncUpdateTaskTypeGroupScreenshot) {
-                UIImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
+                LookinImage *image = [layer lks_groupScreenshotWithLowQuality:NO];
                 itemDetail.groupScreenshot = image;
             }
             

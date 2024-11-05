@@ -7,15 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
+
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
+
+#import "LookinDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LKS_MultiplatformAdapter : NSObject
 
-+ (UIWindow *)keyWindow;
++ (LookinWindow *)keyWindow;
 
-+ (NSArray<UIWindow *> *)allWindows;
++ (NSArray<LookinWindow *> *)allWindows;
 
 + (CGRect)mainScreenBounds;
 

@@ -20,36 +20,43 @@
 
 @implementation CALayer (LookinServer)
 
-- (UIWindow *)lks_window {
+- (LookinWindow *)lks_window {
     CALayer *layer = self;
     while (layer) {
-        UIView *hostView = layer.lks_hostView;
+        LookinView *hostView = layer.lks_hostView;
         if (hostView.window) {
             return hostView.window;
-        } else if ([hostView isKindOfClass:[UIWindow class]]) {
-            return (UIWindow *)hostView;
+        } else if ([hostView isKindOfClass:[LookinWindow class]]) {
+            return (LookinWindow *)hostView;
         }
         layer = layer.superlayer;
     }
     return nil;
 }
 
-- (CGRect)lks_frameInWindow:(UIWindow *)window {
-    UIWindow *selfWindow = [self lks_window];
+- (CGRect)lks_frameInWindow:(LookinWindow *)window {
+    LookinWindow *selfWindow = [self lks_window];
     if (!selfWindow) {
         return CGRectZero;
     }
     
+#if TARGET_OS_IPHONE
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
+#endif
+    
+#if TARGET_OS_OSX
+    CGRect rectInSelfWindow = [selfWindow.contentView.layer convertRect:self.frame fromLayer:self.superlayer];
+    CGRect rectInWindow = [window.contentView convertRect:rectInSelfWindow fromView:selfWindow.contentView];
+#endif
     return rectInWindow;
 }
 
 #pragma mark - Host View
 
-- (UIView *)lks_hostView {
-    if (self.delegate && [self.delegate isKindOfClass:UIView.class]) {
-        UIView *view = (UIView *)self.delegate;
+- (LookinView *)lks_hostView {
+    if (self.delegate && [self.delegate isKindOfClass:LookinView.class]) {
+        LookinView *view = (LookinView *)self.delegate;
         if (view.layer == self) {
             return view;
         }
@@ -59,7 +66,7 @@
 
 #pragma mark - Screenshot
 
-- (UIImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
+- (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
     CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
     CGFloat pixelWidth = self.frame.size.width * screenScale;
@@ -81,6 +88,7 @@
         NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
         return nil;
     }
+#if TARGET_OS_IPHONE
     UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
@@ -91,9 +99,19 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+#endif
+    
+#if TARGET_OS_OSX
+    NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
+        CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+        [self renderInContext:context];
+        return YES;
+    }];
+    return image;
+#endif
 }
 
-- (UIImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
+- (LookinImage *)lks_soloScreenshotWithLowQuality:(BOOL)lowQuality {
     if (!self.sublayers.count) {
         return nil;
     }
@@ -129,6 +147,7 @@
             return nil;
         }
         
+#if TARGET_OS_IPHONE
         UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.lks_hostView && !self.lks_hostView.lks_isChildrenViewOfTabBar) {
@@ -139,16 +158,26 @@
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
+        
+#endif
+        
+#if TARGET_OS_OSX
+        NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
+            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+            [self renderInContext:context];
+            return YES;
+        }];
+#endif
         [visibleSublayers enumerateObjectsUsingBlock:^(CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
             sublayer.hidden = NO;
         }];
-        
         return image;
     }
     return nil;
 }
 
 - (NSArray<NSArray<NSString *> *> *)lks_relatedClassChainList {
+#if TARGET_OS_IPHONE
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
     if (self.lks_hostView) {
         [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"UIView"]];
@@ -160,6 +189,21 @@
         [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
     }
     return array.copy;
+#endif
+    
+#if TARGET_OS_OSX
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
+    if (self.lks_hostView) {
+        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"NSView"]];
+        NSViewController* vc = [self.lks_hostView lks_findHostViewController];
+        if (vc) {
+            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:@"NSViewController"]];
+        }
+    } else {
+        [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
+    }
+    return array.copy;
+#endif
 }
 
 + (NSArray<NSString *> *)lks_getClassListOfObject:(id)object endingClass:(NSString *)endingClass {
@@ -175,7 +219,7 @@
     NSMutableArray *array = [NSMutableArray array];
     NSMutableArray<LookinIvarTrace *> *ivarTraces = [NSMutableArray array];
     if (self.lks_hostView) {
-        UIViewController* vc = [self.lks_hostView lks_findHostViewController];
+        LookinViewController* vc = [self.lks_hostView lks_findHostViewController];
         if (vc) {
             [array addObject:[NSString stringWithFormat:@"(%@ *).view", NSStringFromClass(vc.class)]];
             
@@ -193,24 +237,24 @@
     return array.count ? array.copy : nil;
 }
 
-- (UIColor *)lks_backgroundColor {
-    return [UIColor lks_colorWithCGColor:self.backgroundColor];
+- (LookinColor *)lks_backgroundColor {
+    return [LookinColor lks_colorWithCGColor:self.backgroundColor];
 }
-- (void)setLks_backgroundColor:(UIColor *)lks_backgroundColor {
+- (void)setLks_backgroundColor:(LookinColor *)lks_backgroundColor {
     self.backgroundColor = lks_backgroundColor.CGColor;
 }
 
-- (UIColor *)lks_borderColor {
-    return [UIColor lks_colorWithCGColor:self.borderColor];
+- (LookinColor *)lks_borderColor {
+    return [LookinColor lks_colorWithCGColor:self.borderColor];
 }
-- (void)setLks_borderColor:(UIColor *)lks_borderColor {
+- (void)setLks_borderColor:(LookinColor *)lks_borderColor {
     self.borderColor = lks_borderColor.CGColor;
 }
 
-- (UIColor *)lks_shadowColor {
-    return [UIColor lks_colorWithCGColor:self.shadowColor];
+- (LookinColor *)lks_shadowColor {
+    return [LookinColor lks_colorWithCGColor:self.shadowColor];
 }
-- (void)setLks_shadowColor:(UIColor *)lks_shadowColor {
+- (void)setLks_shadowColor:(LookinColor *)lks_shadowColor {
     self.shadowColor = lks_shadowColor.CGColor;
 }
 

@@ -8,9 +8,17 @@
 //  https://lookin.work
 //
 
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
 
-@interface UIImageView (LookinServer)
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
+
+#import "LookinDefines.h"
+
+@interface LookinImageView (LookinServer)
 
 - (NSString *)lks_imageSourceName;
 - (NSNumber *)lks_imageViewOidIfHasImage;

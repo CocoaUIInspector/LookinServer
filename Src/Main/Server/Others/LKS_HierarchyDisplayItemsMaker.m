@@ -20,17 +20,23 @@
 #import "LKS_CustomDisplayItemsMaker.h"
 #import "LKS_CustomAttrSetterManager.h"
 #import "LKS_MultiplatformAdapter.h"
-
+#import "NSValue+Lookin.h"
 @implementation LKS_HierarchyDisplayItemsMaker
 
 + (NSArray<LookinDisplayItem *> *)itemsWithScreenshots:(BOOL)hasScreenshots attrList:(BOOL)hasAttrList lowImageQuality:(BOOL)lowQuality readCustomInfo:(BOOL)readCustomInfo saveCustomSetter:(BOOL)saveCustomSetter {
     
     [[LKS_TraceManager sharedInstance] reload];
     
-    NSArray<UIWindow *> *windows = [LKS_MultiplatformAdapter allWindows];
+    NSArray<LookinWindow *> *windows = [LKS_MultiplatformAdapter allWindows];
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:windows.count];
-    [windows enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+    [windows enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
+#if TARGET_OS_IPHONE
         LookinDisplayItem *item = [self _displayItemWithLayer:window.layer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter];
+#endif
+        
+#if TARGET_OS_OSX
+        LookinDisplayItem *item = [self _displayItemWithLayer:window.contentView.layer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter];
+#endif
         item.representedAsKeyWindow = window.isKeyWindow;
         if (item) {
             [resultArray addObject:item];
@@ -47,7 +53,7 @@
     
     LookinDisplayItem *item = [LookinDisplayItem new];
     CGRect layerFrame = layer.frame;
-    UIView *hostView = layer.lks_hostView;
+    LookinView *hostView = layer.lks_hostView;
     if (hostView && hostView.superview) {
         layerFrame = [hostView.superview convertRect:layerFrame toView:nil];
     }
@@ -79,17 +85,17 @@
     item.shouldCaptureImage = [LKSConfigManager shouldCaptureScreenshotOfLayer:layer];
     
     if (layer.lks_hostView) {
-        UIView *view = layer.lks_hostView;
+        LookinView *view = layer.lks_hostView;
         item.viewObject = [LookinObject instanceWithObject:view];
         item.eventHandlers = [LKS_EventHandlerMaker makeForView:view];
-        item.backgroundColor = view.backgroundColor;
+        item.backgroundColor = [view valueForKeyPath:@"backgroundColor"];
         
-        UIViewController* vc = [view lks_findHostViewController];
+        LookinViewController* vc = [view lks_findHostViewController];
         if (vc) {
             item.hostViewControllerObject = [LookinObject instanceWithObject:vc];
         }
     } else {
-        item.backgroundColor = [UIColor lks_colorWithCGColor:layer.backgroundColor];
+        item.backgroundColor = [LookinColor lks_colorWithCGColor:layer.backgroundColor];
     }
     
     if (layer.sublayers.count) {

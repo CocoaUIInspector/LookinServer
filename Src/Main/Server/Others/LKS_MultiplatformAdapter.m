@@ -7,11 +7,19 @@
 //
 
 #import "LKS_MultiplatformAdapter.h"
+
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
+
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
 
 @implementation LKS_MultiplatformAdapter
 
 + (BOOL)isiPad {
+#if TARGET_OS_IPHONE
     static BOOL s_isiPad = NO;
 
     static dispatch_once_t onceToken;
@@ -21,21 +29,34 @@
     });
 
     return s_isiPad;
+#endif
+    
+#if TARGET_OS_OSX
+    return NO;
+#endif
 }
 
 + (CGRect)mainScreenBounds {
 #if TARGET_OS_VISION
     return [LKS_MultiplatformAdapter getFirstActiveWindowScene].coordinateSpace.bounds;
-#else
+#elif TARGET_OS_IPHONE
     return [UIScreen mainScreen].bounds;
+#elif TARGET_OS_OSX
+    return [NSScreen mainScreen].frame;
+#else
+    return CGRectZero;
 #endif
 }
 
 + (CGFloat)mainScreenScale {
 #if TARGET_OS_VISION
     return 2.f;
-#else
+#elif TARGET_OS_IPHONE
     return [UIScreen mainScreen].scale;
+#elif TARGET_OS_OSX
+    return [NSScreen mainScreen].backingScaleFactor;
+#else
+    return 1.f;
 #endif
 }
 
@@ -54,15 +75,15 @@
 }
 #endif
 
-+ (UIWindow *)keyWindow {
++ (LookinWindow *)keyWindow {
 #if TARGET_OS_VISION
     return [self getFirstActiveWindowScene].keyWindow;
 #else
-    return [UIApplication sharedApplication].keyWindow;
+    return [LookinApplication sharedApplication].keyWindow;
 #endif
 }
 
-+ (NSArray<UIWindow *> *)allWindows {
++ (NSArray<LookinWindow *> *)allWindows {
 #if TARGET_OS_VISION
     NSMutableArray<UIWindow *> *windows = [NSMutableArray new];
     for (UIScene *scene in
@@ -83,7 +104,7 @@
 
     return [windows copy];
 #else
-    return [[UIApplication sharedApplication].windows copy];
+    return [[LookinApplication sharedApplication].windows copy];
 #endif
 }
 

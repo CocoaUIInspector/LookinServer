@@ -16,6 +16,7 @@
 #import "LookinServerDefines.h"
 #import "LKS_MultiplatformAdapter.h"
 
+#if TARGET_OS_IPHONE
 @interface LKS_ExportManagerMaskView : UIView
 
 @property(nonatomic, strong) UIView *tipsView;
@@ -87,15 +88,19 @@
 }
 
 @end
+#endif
+
+#if TARGET_OS_OSX
+#endif
 
 @interface LKS_ExportManager ()
 
 #if TARGET_OS_TV
-#else
+#elif TARGET_OS_IPHONE
 @property(nonatomic, strong) UIDocumentInteractionController *documentController;
+@property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
 #endif
 
-@property(nonatomic, strong) LKS_ExportManagerMaskView *maskView;
 
 @end
 
@@ -114,7 +119,7 @@
     return [self sharedInstance];
 }
 
-#if TARGET_OS_TV
+#if TARGET_OS_TV || TARGET_OS_OSX
 - (void)exportAndShare {
     NSAssert(NO, @"not supported");
 }
