@@ -90,8 +90,8 @@
     item.layerObject = [LookinObject instanceWithObject:layer];
     item.shouldCaptureImage = [LKSConfigManager shouldCaptureScreenshotOfLayer:layer];
     
-    if (layer.lks_hostView) {
-        LookinView *view = layer.lks_hostView;
+    LookinView *view = layer.lks_hostView;
+    if (view) {
         item.viewObject = [LookinObject instanceWithObject:view];
         item.eventHandlers = [LKS_EventHandlerMaker makeForView:view];
         item.backgroundColor = [view valueForKeyPath:@"backgroundColor"];

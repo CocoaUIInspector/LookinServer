@@ -90,7 +90,7 @@
     if ([self isKindOfClass:[NSControl class]]) {
         return [((NSControl *)self) sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
     } else {
-        return self.bounds.size;
+        return self.fittingSize;
     }
 #endif
 }
@@ -286,7 +286,7 @@
     }
     [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
     
-    NSImage *image = [[NSImage alloc] initWithSize:self.bounds.size];
+    NSImage *image = [[NSImage alloc] initWithSize:contextSize];
     
     [image addRepresentation:rep];
     
@@ -335,7 +335,7 @@
         }
         [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
         
-        NSImage *image = [[NSImage alloc] initWithSize:self.bounds.size];
+        NSImage *image = [[NSImage alloc] initWithSize:contextSize];
         
         [image addRepresentation:rep];
         [visibleSubviews enumerateObjectsUsingBlock:^(NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {

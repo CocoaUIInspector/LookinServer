@@ -160,6 +160,8 @@ static NSString * const CodingKey_DeviceType = @"8";
         info.deviceType = LookinAppInfoDeviceSimulator;
     } else if ([LKS_MultiplatformAdapter isiPad]) {
         info.deviceType = LookinAppInfoDeviceIPad;
+    } else if ([LKS_MultiplatformAdapter isMac]) {
+        info.deviceType = LookinAppInfoDeviceMac;
     } else {
         info.deviceType = LookinAppInfoDeviceOthers;
     }

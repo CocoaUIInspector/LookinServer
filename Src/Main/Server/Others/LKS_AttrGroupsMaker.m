@@ -326,7 +326,7 @@
         LookinInsets targetValue;
         [invocation getReturnValue:&targetValue];
         attribute.attrType = LookinAttrTypeUIEdgeInsets;
-        attribute.value = [NSValue valueWithEdgeInsets:targetValue];
+        attribute.value = [NSValue valueWithInsets:targetValue];
 #if !TARGET_OS_OSX
     } else if (strcmp(returnType, @encode(UIOffset)) == 0) {
         UIOffset targetValue;

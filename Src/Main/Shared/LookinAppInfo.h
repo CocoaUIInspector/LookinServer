@@ -15,7 +15,8 @@
 typedef NS_ENUM(NSInteger, LookinAppInfoDevice) {
     LookinAppInfoDeviceSimulator,   // 模拟器
     LookinAppInfoDeviceIPad,    // iPad 真机
-    LookinAppInfoDeviceOthers   // 应该视为 iPhone 真机
+    LookinAppInfoDeviceOthers,   // 应该视为 iPhone 真机
+    LookinAppInfoDeviceMac, // 使用AppKit的Mac应用（非 Catalyst）
 };
 
 @interface LookinAppInfo : NSObject <NSSecureCoding, NSCopying>

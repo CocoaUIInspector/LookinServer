@@ -8,26 +8,18 @@
 import Cocoa
 
 class ViewController: NSViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(view.layer)
         // Do any additional setup after loading the view.
     }
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
+            // Update the view, if already loaded.
         }
     }
 
-
     override func viewDidAppear() {
         super.viewDidAppear()
-        
-        print(view.layer)
-        print(view.superview?.layer)
     }
-    
 }
-

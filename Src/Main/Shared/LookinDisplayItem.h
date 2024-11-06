@@ -12,7 +12,7 @@
 #import "LookinObject.h"
 #import "LookinDefines.h"
 #import "LookinCustomDisplayItemInfo.h"
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
 #import <Appkit/Appkit.h>

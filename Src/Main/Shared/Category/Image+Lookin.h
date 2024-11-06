@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 
 #elif TARGET_OS_MAC
 

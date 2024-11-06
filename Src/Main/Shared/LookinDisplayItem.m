@@ -19,7 +19,7 @@
 #import "NSObject+Lookin.h"
 #import "LookinDashboardBlueprint.h"
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
 #import "UIImage+LookinServer.h"
 #elif TARGET_OS_MAC
@@ -147,7 +147,7 @@
         self.shouldCaptureImage = [aDecoder containsValueForKey:@"shouldCaptureImage"] ? [aDecoder decodeBoolForKey:@"shouldCaptureImage"] : YES;
         self.customDisplayTitle = [aDecoder decodeObjectForKey:@"customDisplayTitle"];
         self.danceuiSource = [aDecoder decodeObjectForKey:@"danceuiSource"];
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
         self.backgroundColor = [UIColor lks_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];

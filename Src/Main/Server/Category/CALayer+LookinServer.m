@@ -101,11 +101,25 @@
     UIGraphicsEndImageContext();
     return image;
 #elif TARGET_OS_OSX
-    NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
-        CGContextRef context = NSGraphicsContext.currentContext.CGContext;
-        [self renderInContext:context];
-        return YES;
-    }];
+    NSImage *image = nil;
+    NSView *view = self.lks_hostView;
+    if (view) {
+        NSBitmapImageRep *representation = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+        if (!representation) {
+            return nil;
+        }
+        [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
+        
+        image = [[NSImage alloc] initWithSize:contextSize];
+        
+        [image addRepresentation:representation];
+    } else {
+        image = [NSImage imageWithSize:contextSize flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+            [self renderInContext:context];
+            return YES;
+        }];
+    }
     return image;
 #endif
 }
@@ -159,11 +173,25 @@
         
         
 #elif TARGET_OS_OSX
-        NSImage *image = [NSImage imageWithSize:contextSize flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
-            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
-            [self renderInContext:context];
-            return YES;
-        }];
+        NSImage *image = nil;
+        NSView *view = self.lks_hostView;
+        if (view) {
+            NSBitmapImageRep *representation = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+            if (!representation) {
+                return nil;
+            }
+            [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
+            
+            image = [[NSImage alloc] initWithSize:contextSize];
+            
+            [image addRepresentation:representation];
+        } else {
+            image = [NSImage imageWithSize:contextSize flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+                CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+                [self renderInContext:context];
+                return YES;
+            }];
+        }
 #endif
         [visibleSublayers enumerateObjectsUsingBlock:^(CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
             sublayer.hidden = NO;

@@ -1,7 +1,7 @@
 #ifdef SHOULD_COMPILE_LOOKIN_SERVER
 //
 //  LKS_MultiplatformAdapter.m
-//  
+//
 //
 //  Created by nixjiang on 2024/3/12.
 //
@@ -29,9 +29,15 @@
     });
 
     return s_isiPad;
+#else
+    return NO;
 #endif
-    
+}
+
++ (BOOL)isMac {
 #if TARGET_OS_OSX
+    return YES;
+#else
     return NO;
 #endif
 }
@@ -42,7 +48,8 @@
 #elif TARGET_OS_IPHONE
     return [UIScreen mainScreen].bounds;
 #elif TARGET_OS_OSX
-    return [NSScreen mainScreen].frame;
+    // 这里不能返回屏幕的bounds，因为在macOS上，窗口可以不全屏显示，Lookin的设计是基于窗口的，一般iOS中屏幕的bounds就是窗口的bounds，所以这里直接返回窗口的bounds
+    return NSApplication.sharedApplication.windows.firstObject.contentView.bounds;
 #else
     return CGRectZero;
 #endif
@@ -78,8 +85,12 @@
 + (LookinWindow *)keyWindow {
 #if TARGET_OS_VISION
     return [self getFirstActiveWindowScene].keyWindow;
-#else
+#elif TARGET_OS_IPHONE
     return [LookinApplication sharedApplication].keyWindow;
+#elif TARGET_OS_OSX
+    return [LookinApplication sharedApplication].windows.firstObject;
+#else
+    return nil;
 #endif
 }
 

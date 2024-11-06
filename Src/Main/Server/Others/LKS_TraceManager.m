@@ -14,7 +14,7 @@
 #import "LookinServerDefines.h"
 #import "LookinWeakContainer.h"
 #import "LKS_MultiplatformAdapter.h"
-
+#import "NSWindow+LookinServer.h"
 #ifdef LOOKIN_SERVER_SWIFT_ENABLED
 
 #if __has_include(<LookinServer/LookinServer-Swift.h>)
@@ -78,24 +78,23 @@
     [[LKS_MultiplatformAdapter allWindows] enumerateObjectsUsingBlock:^(__kindof LookinWindow * _Nonnull window, NSUInteger idx, BOOL * _Nonnull stop) {
 #if TARGET_OS_IPHONE
         [self _addTraceForLayersRootedByLayer:window.layer];
-#endif
-        
-#if TARGET_OS_OSX
-        [self _addTraceForInterfaceObject:window];
+#elif TARGET_OS_OSX
+        [self _addTraceForLayersRootedByLayer:window.lks_rootView.layer];
 #endif
     }];
 }
 
-#if TARGET_OS_IPHONE
 - (void)_addTraceForLayersRootedByLayer:(CALayer *)layer {
     LookinView *view = layer.lks_hostView;
     
+#if TARGET_OS_IPHONE
     if ([view.superview lks_isChildrenViewOfTabBar]) {
         view.lks_isChildrenViewOfTabBar = YES;
     } else if ([view isKindOfClass:[UITabBar class]]) {
         view.lks_isChildrenViewOfTabBar = YES;
     }
     
+#endif
     if (view) {
         [self _markIVarsInAllClassLevelsOfObject:view];
         LookinViewController* vc = [view lks_findHostViewController];
@@ -112,7 +111,6 @@
         [self _addTraceForLayersRootedByLayer:sublayer];
     }];
 }
-#endif
 
 #if TARGET_OS_OSX
 - (void)_addTraceForInterfaceObject:(id)interfaceObject {
@@ -139,8 +137,6 @@
             [self _addTraceForInterfaceObject:subview];
         }];
     }
-    
-
 }
 #endif
 
@@ -149,7 +145,7 @@
     if (vc) {
         view.lks_specialTrace = [NSString stringWithFormat:@"%@.view", NSStringFromClass(vc.class)];
         
-#if !TARGET_OS_OSX
+#if TARGET_OS_IPHONE
     } else if ([view isKindOfClass:[LookinWindow class]]) {
         CGFloat currentWindowLevel = ((LookinWindow *)view).windowLevel;
         
@@ -206,9 +202,7 @@
             NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
             cell.lks_specialTrace = [NSString stringWithFormat:@"{ item:%@, sec:%@ }", @(indexPath.item), @(indexPath.section)];
         }];
-#endif
-        
-#if TARGET_OS_OSX
+#elif TARGET_OS_OSX
         [[collectionView indexPathsForVisibleSupplementaryElementsOfKind:LookinCollectionElementKindSectionHeader] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, BOOL * _Nonnull stop) {
             LookinView *headerView = [collectionView supplementaryViewForElementKind:LookinCollectionElementKindSectionHeader atIndexPath:indexPath];
             headerView.lks_specialTrace = [NSString stringWithFormat:@"sectionHeader { sec:%@ }", @(indexPath.section)];

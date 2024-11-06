@@ -78,8 +78,6 @@
 #if TARGET_OS_OSX
             NSView *view = object;
             if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
-                
-                
                 if (task.taskType == LookinStaticAsyncUpdateTaskTypeSoloScreenshot) {
                     LookinImage *image = [view lks_soloScreenshotWithLowQuality:NO];
                     itemDetail.soloScreenshot = image;
@@ -116,7 +114,6 @@
                 return itemDetail;
             }
 #endif
-            
             if (!object || ![object isKindOfClass:[CALayer class]]) {
                 itemDetail.failureCode = -1;
                 return itemDetail;
