@@ -8,19 +8,22 @@
 //  https://lookin.work
 //
 
+
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+#endif
 
-@interface UITextField (LookinServer)
+#import "LookinDefines.h"
+
+@interface LookinTextField (LookinServer)
 
 @property(nonatomic, assign) CGFloat lks_fontSize;
 
 - (NSString *)lks_fontName;
 
 @end
-#endif
 
-#if TARGET_OS_OSX
-#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

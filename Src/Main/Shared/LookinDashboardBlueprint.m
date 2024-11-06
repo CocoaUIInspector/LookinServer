@@ -24,6 +24,7 @@
             LookinAttrGroup_Layout,
             LookinAttrGroup_AutoLayout,
             LookinAttrGroup_ViewLayer,
+#if TARGET_OS_IPHONE
             LookinAttrGroup_UIStackView,
             LookinAttrGroup_UIVisualEffectView,
             LookinAttrGroup_UIImageView,
@@ -34,6 +35,18 @@
             LookinAttrGroup_UITableView,
             LookinAttrGroup_UITextView,
             LookinAttrGroup_UITextField
+#endif
+#if TARGET_OS_OSX
+            LookinAttrGroup_NSImageView,
+            LookinAttrGroup_NSControl,
+            LookinAttrGroup_NSButton,
+            LookinAttrGroup_NSScrollView,
+            LookinAttrGroup_NSTableView,
+            LookinAttrGroup_NSTextView,
+            LookinAttrGroup_NSTextField,
+            LookinAttrGroup_NSVisualEffectView,
+            LookinAttrGroup_NSStackView,
+#endif
         ];
     });
     return array;
@@ -66,11 +79,14 @@
                 LookinAttrSec_ViewLayer_Border,
                 LookinAttrSec_ViewLayer_Corner,
                 LookinAttrSec_ViewLayer_Shadow,
+                LookinAttrSec_ViewLayer_Tag,
+#if TARGET_OS_IPHONE
                 LookinAttrSec_ViewLayer_ContentMode,
                 LookinAttrSec_ViewLayer_TintColor,
-                LookinAttrSec_ViewLayer_Tag
+#endif
             ],
             
+#if TARGET_OS_IPHONE
             LookinAttrGroup_UIStackView: @[
                 LookinAttrSec_UIStackView_Axis,
                 LookinAttrSec_UIStackView_Distribution,
@@ -139,6 +155,81 @@
                                            LookinAttrSec_UITextField_Clears,
                                            LookinAttrSec_UITextField_CanAdjustFont,
                                            LookinAttrSec_UITextField_ClearButtonMode],
+#endif
+#if TARGET_OS_OSX
+            LookinAttrGroup_NSImageView: @[
+                LookinAttrSec_NSImageView_Name,
+                LookinAttrSec_NSImageView_Open
+            ],
+            
+            LookinAttrGroup_NSControl: @[
+                LookinAttrSec_NSControl_State,
+                LookinAttrSec_NSControl_ControlSize,
+                LookinAttrSec_NSControl_Font,
+                LookinAttrSec_NSControl_Alignment,
+                LookinAttrSec_NSControl_Misc,
+                LookinAttrSec_NSControl_Value,
+            ],
+            
+            LookinAttrGroup_NSButton: @[
+                LookinAttrSec_NSButton_ButtonType,
+                LookinAttrSec_NSButton_Title,
+                LookinAttrSec_NSButton_BezelStyle,
+                LookinAttrSec_NSButton_Bordered,
+                LookinAttrSec_NSButton_Transparent,
+                LookinAttrSec_NSButton_BezelColor,
+                LookinAttrSec_NSButton_ContentTintColor,
+                LookinAttrSec_NSButton_Misc,
+            ],
+            
+            LookinAttrGroup_NSScrollView: @[
+                LookinAttrSec_NSScrollView_ContentOffset,
+                LookinAttrSec_NSScrollView_ContentSize,
+                LookinAttrSec_NSScrollView_ContentInset,
+                LookinAttrSec_NSScrollView_BorderType,
+                LookinAttrSec_NSScrollView_Scroller,
+                LookinAttrSec_NSScrollView_Ruler,
+                LookinAttrSec_NSScrollView_LineScroll,
+                LookinAttrSec_NSScrollView_PageScroll,
+                LookinAttrSec_NSScrollView_ScrollElasiticity,
+                LookinAttrSec_NSScrollView_Misc,
+                LookinAttrSec_NSScrollView_Magnification,
+            ],
+            
+            LookinAttrGroup_NSTableView: @[
+                LookinAttrSec_NSTableView_Style,
+                LookinAttrSec_NSTableView_SectionsNumber,
+                LookinAttrSec_NSTableView_RowsNumber,
+                LookinAttrSec_NSTableView_SeparatorStyle,
+                LookinAttrSec_NSTableView_SeparatorColor,
+                LookinAttrSec_NSTableView_SeparatorInset
+            ],
+            
+            LookinAttrGroup_NSTextView: @[
+                LookinAttrSec_NSTextView_Basic,
+                LookinAttrSec_NSTextView_Text,
+                LookinAttrSec_NSTextView_Font,
+                LookinAttrSec_NSTextView_TextColor,
+                LookinAttrSec_NSTextView_Alignment,
+                LookinAttrSec_NSTextView_ContainerInset
+            ],
+            
+            LookinAttrGroup_NSTextField: @[
+                LookinAttrSec_NSTextField_Text,
+                LookinAttrSec_NSTextField_Font,
+                LookinAttrSec_NSTextField_NumberOfLines,
+                LookinAttrSec_NSTextField_TextColor,
+                LookinAttrSec_NSTextField_BreakMode,
+                LookinAttrSec_NSTextField_Alignment,
+                LookinAttrSec_NSTextField_CanAdjustFont,
+                LookinAttrSec_NSTextField_Placeholder,
+            ],
+            
+            
+            LookinAttrGroup_NSVisualEffectView: @[
+                LookinAttrSec_NSVisualEffectView_Style,
+            ],
+#endif
             
         };
     });
@@ -185,13 +276,16 @@
                                               LookinAttr_ViewLayer_Shadow_Radius,
                                               LookinAttr_ViewLayer_Shadow_OffsetW,
                                               LookinAttr_ViewLayer_Shadow_OffsetH],
+#if TARGET_OS_IPHONE
             
             LookinAttrSec_ViewLayer_ContentMode: @[LookinAttr_ViewLayer_ContentMode_Mode],
             
             LookinAttrSec_ViewLayer_TintColor: @[LookinAttr_ViewLayer_TintColor_Color,
                                                  LookinAttr_ViewLayer_TintColor_Mode],
+#endif
             
             LookinAttrSec_ViewLayer_Tag: @[LookinAttr_ViewLayer_Tag_Tag],
+#if TARGET_OS_IPHONE
             
             LookinAttrSec_UIStackView_Axis: @[LookinAttr_UIStackView_Axis_Axis],
             
@@ -314,6 +408,10 @@
                                                        LookinAttr_UITextField_CanAdjustFont_MinSize],
             
             LookinAttrSec_UITextField_ClearButtonMode: @[LookinAttr_UITextField_ClearButtonMode_Mode]
+#endif
+#if TARGET_OS_OSX
+            
+#endif
         };
     });
     return dict[sectionID];
@@ -353,6 +451,7 @@
             LookinAttrGroup_Relation: @"Relation",
             LookinAttrGroup_Layout: @"Layout",
             LookinAttrGroup_AutoLayout: @"AutoLayout",
+#if TARGET_OS_IPHONE
             LookinAttrGroup_ViewLayer: @"CALayer / UIView",
             LookinAttrGroup_UIImageView: @"UIImageView",
             LookinAttrGroup_UILabel: @"UILabel",
@@ -364,6 +463,19 @@
             LookinAttrGroup_UITextField: @"UITextField",
             LookinAttrGroup_UIVisualEffectView: @"UIVisualEffectView",
             LookinAttrGroup_UIStackView: @"UIStackView"
+#endif
+#if TARGET_OS_OSX
+            LookinAttrGroup_ViewLayer:          @"CALayer / NSView",
+            LookinAttrGroup_NSImageView:        @"NSImageView",
+            LookinAttrGroup_NSControl:          @"NSControl",
+            LookinAttrGroup_NSButton:           @"NSButton",
+            LookinAttrGroup_NSScrollView:       @"NSScrollView",
+            LookinAttrGroup_NSTableView:        @"NSTableView",
+            LookinAttrGroup_NSTextView:         @"NSTextView",
+            LookinAttrGroup_NSTextField:        @"NSTextField",
+            LookinAttrGroup_NSVisualEffectView: @"NSVisualEffectView",
+            LookinAttrGroup_NSStackView:        @"NSStackView"
+#endif
         };
     });
     NSString *title = rawInfo[groupID];
@@ -388,9 +500,10 @@
             LookinAttrSec_ViewLayer_BgColor: @"BackgroundColor",
             LookinAttrSec_ViewLayer_Border: @"Border",
             LookinAttrSec_ViewLayer_Shadow: @"Shadow",
+            LookinAttrSec_ViewLayer_Tag: @"Tag",
+#if TARGET_OS_IPHONE
             LookinAttrSec_ViewLayer_ContentMode: @"ContentMode",
             LookinAttrSec_ViewLayer_TintColor: @"TintColor",
-            LookinAttrSec_ViewLayer_Tag: @"Tag",
             LookinAttrSec_UIStackView_Axis: @"Axis",
             LookinAttrSec_UIStackView_Distribution: @"Distribution",
             LookinAttrSec_UIStackView_Alignment: @"Alignment",
@@ -436,6 +549,7 @@
             LookinAttrSec_UITextView_Font: @"Font",
             LookinAttrSec_UITextView_ContainerInset: @"ContainerInset",
             LookinAttrSec_UITextField_ClearButtonMode: @"ClearButtonMode",
+#endif
         };
     });
     return rawInfo[secID];
@@ -493,12 +607,22 @@
                 @"fullTitle": @"Bounds",
                 @"patch": @(YES)
             },
+#if TARGET_OS_IPHONE
             LookinAttr_Layout_SafeArea_SafeArea: @{
                 @"className": @"UIView",
                 @"fullTitle": @"SafeAreaInsets",
                 @"setterString": @"",
                 @"osVersion": @(11)
             },
+#endif
+#if TARGET_OS_OSX
+            LookinAttr_Layout_SafeArea_SafeArea: @{
+                @"className": @"NSView",
+                @"fullTitle": @"SafeAreaInsets",
+                @"setterString": @"",
+                @"osVersion": @(11)
+            },
+#endif
             LookinAttr_Layout_Position_Position: @{
                 @"className": @"CALayer",
                 @"fullTitle": @"Position",
@@ -510,6 +634,7 @@
                 @"patch": @(YES)
             },
             
+#if TARGET_OS_IPHONE
             LookinAttr_AutoLayout_Hugging_Hor: @{
                 @"className": @"UIView",
                 @"fullTitle": @"ContentHuggingPriority(Horizontal)",
@@ -554,7 +679,96 @@
                 @"fullTitle": @"IntrinsicContentSize",
                 @"setterString": @""
             },
+#endif
+#if TARGET_OS_OSX
+            LookinAttr_AutoLayout_Hugging_Hor: @{
+                @"className": @"NSView",
+                @"fullTitle": @"ContentHuggingPriority(Horizontal)",
+                @"getterString": @"lks_horizontalContentHuggingPriority",
+                @"setterString": @"setLks_horizontalContentHuggingPriority:",
+                @"briefTitle": @"H",
+                @"patch": @(YES)
+            },
+            LookinAttr_AutoLayout_Hugging_Ver: @{
+                @"className": @"NSView",
+                @"fullTitle": @"ContentHuggingPriority(Vertical)",
+                @"getterString": @"lks_verticalContentHuggingPriority",
+                @"setterString": @"setLks_verticalContentHuggingPriority:",
+                @"briefTitle": @"V",
+                @"patch": @(YES)
+            },
+            LookinAttr_AutoLayout_Resistance_Hor: @{
+                @"className": @"NSView",
+                @"fullTitle": @"ContentCompressionResistancePriority(Horizontal)",
+                @"getterString": @"lks_horizontalContentCompressionResistancePriority",
+                @"setterString": @"setLks_horizontalContentCompressionResistancePriority:",
+                @"briefTitle": @"H",
+                @"patch": @(YES)
+            },
+            LookinAttr_AutoLayout_Resistance_Ver: @{
+                @"className": @"NSView",
+                @"fullTitle": @"ContentCompressionResistancePriority(Vertical)",
+                @"getterString": @"lks_verticalContentCompressionResistancePriority",
+                @"setterString": @"setLks_verticalContentCompressionResistancePriority:",
+                @"briefTitle": @"V",
+                @"patch": @(YES)
+            },
+            LookinAttr_AutoLayout_Constraints_Constraints: @{
+                @"className": @"NSView",
+                @"getterString": @"lks_constraints",
+                @"setterString": @"",
+                @"typeIfObj": @(LookinAttrTypeCustomObj),
+                @"hideIfNil": @(YES)
+            },
+            LookinAttr_AutoLayout_IntrinsicSize_Size: @{
+                @"className": @"NSView",
+                @"fullTitle": @"IntrinsicContentSize",
+                @"setterString": @""
+            },
+#endif
+#if TARGET_OS_IPHONE
             
+            LookinAttr_ViewLayer_InterationAndMasks_Interaction: @{
+                @"className": @"UIView",
+                @"fullTitle": @"UserInteractionEnabled",
+                @"getterString": @"isUserInteractionEnabled",
+                @"patch": @(NO)
+            },
+            
+            LookinAttr_ViewLayer_ContentMode_Mode: @{
+                @"className": @"UIView",
+                @"fullTitle": @"ContentMode",
+                @"enumList": @"UIViewContentMode",
+                @"patch": @(YES)
+            },
+            LookinAttr_ViewLayer_TintColor_Color: @{
+                @"className": @"UIView",
+                @"fullTitle": @"TintColor",
+                @"typeIfObj": @(LookinAttrTypeUIColor),
+                @"patch": @(YES)
+            },
+            LookinAttr_ViewLayer_TintColor_Mode: @{
+                @"className": @"UIView",
+                @"fullTitle": @"TintAdjustmentMode",
+                @"enumList": @"UIViewTintAdjustmentMode",
+                @"patch": @(YES)
+            },
+            LookinAttr_ViewLayer_Tag_Tag: @{
+                @"className": @"UIView",
+                @"fullTitle": @"Tag",
+                @"briefTitle": @"",
+                @"patch": @(NO)
+            },
+#endif
+#if TARGET_OS_OSX
+            
+            LookinAttr_ViewLayer_Tag_Tag: @{
+                @"className": @"NSView",
+                @"fullTitle": @"Tag",
+                @"briefTitle": @"",
+                @"patch": @(NO)
+            },
+#endif
             LookinAttr_ViewLayer_Visibility_Hidden: @{
                 @"className": @"CALayer",
                 @"fullTitle": @"Hidden",
@@ -567,12 +781,6 @@
                 @"setterString": @"setOpacity:",
                 @"getterString": @"opacity",
                 @"patch": @(YES)
-            },
-            LookinAttr_ViewLayer_InterationAndMasks_Interaction: @{
-                @"className": @"UIView",
-                @"fullTitle": @"UserInteractionEnabled",
-                @"getterString": @"isUserInteractionEnabled",
-                @"patch": @(NO)
             },
             LookinAttr_ViewLayer_InterationAndMasks_MasksToBounds: @{
                 @"className": @"CALayer",
@@ -645,30 +853,7 @@
                 @"getterString": @"lks_shadowOffsetHeight",
                 @"patch": @(YES)
             },
-            LookinAttr_ViewLayer_ContentMode_Mode: @{
-                @"className": @"UIView",
-                @"fullTitle": @"ContentMode",
-                @"enumList": @"UIViewContentMode",
-                @"patch": @(YES)
-            },
-            LookinAttr_ViewLayer_TintColor_Color: @{
-                @"className": @"UIView",
-                @"fullTitle": @"TintColor",
-                @"typeIfObj": @(LookinAttrTypeUIColor),
-                @"patch": @(YES)
-            },
-            LookinAttr_ViewLayer_TintColor_Mode: @{
-                @"className": @"UIView",
-                @"fullTitle": @"TintAdjustmentMode",
-                @"enumList": @"UIViewTintAdjustmentMode",
-                @"patch": @(YES)
-            },
-            LookinAttr_ViewLayer_Tag_Tag: @{
-                @"className": @"UIView",
-                @"fullTitle": @"Tag",
-                @"briefTitle": @"",
-                @"patch": @(NO)
-            },
+#if TARGET_OS_IPHONE
             
             LookinAttr_UIStackView_Axis_Axis: @{
                 @"className": @"UIStackView",
@@ -1088,6 +1273,7 @@
                 @"enumList": @"UITextFieldViewMode",
                 @"patch": @(NO)
             },
+#endif
         };
     });
     

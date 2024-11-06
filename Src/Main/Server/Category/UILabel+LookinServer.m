@@ -28,7 +28,4 @@
 @end
 #endif
 
-#if TARGET_OS_OSX
-#endif
-
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -8,16 +8,16 @@
 //  https://lookin.work
 //
 
-#if TARGET_OS_IPHONE
+
 #import "UITextField+LookinServer.h"
 
-@implementation UITextField (LookinServer)
+@implementation LookinTextField (LookinServer)
 
 - (CGFloat)lks_fontSize {
     return self.font.pointSize;
 }
 - (void)setLks_fontSize:(CGFloat)lks_fontSize {
-    UIFont *font = [self.font fontWithSize:lks_fontSize];
+    LookinFont *font = [self.font fontWithSize:lks_fontSize];
     self.font = font;
 }
 
@@ -26,9 +26,5 @@
 }
 
 @end
-#endif
-
-#if TARGET_OS_OSX
-#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

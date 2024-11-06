@@ -9,6 +9,7 @@
 //
 
 #if TARGET_OS_IPHONE
+
 #import <UIKit/UIKit.h>
 
 @interface UILabel (LookinServer)
@@ -18,9 +19,7 @@
 - (NSString *)lks_fontName;
 
 @end
-#endif
 
-#if TARGET_OS_OSX
 #endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

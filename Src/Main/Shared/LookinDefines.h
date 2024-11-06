@@ -159,6 +159,8 @@ enum {
 #define LookinCollectionView UICollectionView
 #define LookinCollectionElementKindSectionHeader UICollectionElementKindSectionHeader
 #define LookinCollectionElementKindSectionFooter UICollectionElementKindSectionFooter
+#define LookinTextField UITextField
+#define LookinTextView UITextView
 #elif TARGET_OS_OSX
 #define LookinColor NSColor
 #define LookinInsets NSEdgeInsets
@@ -178,6 +180,8 @@ enum {
 #define LookinCollectionView NSCollectionView
 #define LookinCollectionElementKindSectionHeader NSCollectionElementKindSectionHeader
 #define LookinCollectionElementKindSectionFooter NSCollectionElementKindSectionFooter
+#define LookinTextField NSTextField
+#define LookinTextView NSTextView
 #endif
 
 #define LookinColorRGBAMake(r, g, b, a) [LookinColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]

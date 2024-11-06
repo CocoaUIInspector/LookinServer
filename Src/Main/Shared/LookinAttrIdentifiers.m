@@ -23,6 +23,7 @@ LookinAttrGroupIdentifier const LookinAttrGroup_Relation = @"r";
 LookinAttrGroupIdentifier const LookinAttrGroup_Layout = @"l";
 LookinAttrGroupIdentifier const LookinAttrGroup_AutoLayout = @"a";
 LookinAttrGroupIdentifier const LookinAttrGroup_ViewLayer = @"vl";
+#if TARGET_OS_IPHONE
 LookinAttrGroupIdentifier const LookinAttrGroup_UIImageView = @"i";
 LookinAttrGroupIdentifier const LookinAttrGroup_UILabel = @"la";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIControl = @"co";
@@ -33,6 +34,7 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UITextView = @"te";
 LookinAttrGroupIdentifier const LookinAttrGroup_UITextField = @"tf";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView = @"ve";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView = @"UIStackView";
+#endif
 
 LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom = @"guc"; // user custom
 
