@@ -257,6 +257,7 @@
 
 #pragma mark - Screenshot
 
+#if TARGET_OS_OSX
 - (LookinImage *)lks_groupScreenshotWithLowQuality:(BOOL)lowQuality {
     
     CGFloat screenScale = [LKS_MultiplatformAdapter mainScreenScale];
@@ -345,6 +346,7 @@
     }
     return nil;
 }
+#endif
 
 @end
 

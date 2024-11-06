@@ -71,6 +71,7 @@
     }
     
     for (NSString *name in selectors) {
+#if TARGET_OS_OSX
         if (self.view && !self.view.layer) {
             [self makeAttrsForViewOrLayer:self.view selectorName:name];
             CALayer *layer = self.view.layer;
@@ -79,6 +80,7 @@
             }
             continue;
         }
+#endif
         if (self.layer) {
             [self makeAttrsForViewOrLayer:self.layer selectorName:name];
             

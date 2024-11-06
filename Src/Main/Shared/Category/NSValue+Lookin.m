@@ -77,11 +77,23 @@ NSString *NSStringFromDirectionalEdgeInsets(NSDirectionalEdgeInsets insets) {
 }
 #endif
 + (NSValue *)valueWithInsets:(LookinInsets)insets {
+#if TARGET_OS_IPHONE
+    return [self valueWithUIEdgeInsets:insets];
+#endif
+    
+#if TARGET_OS_OSX
     return [self valueWithEdgeInsets:insets];
+#endif
 }
 
 - (LookinInsets)InsetsValue {
+#if TARGET_OS_IPHONE
+    return self.UIEdgeInsetsValue;
+#endif
+    
+#if TARGET_OS_OSX
     return [self edgeInsetsValue];
+#endif
 }
 
 @end

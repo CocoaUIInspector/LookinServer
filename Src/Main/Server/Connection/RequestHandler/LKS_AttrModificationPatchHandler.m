@@ -29,8 +29,8 @@
         LookinDisplayItemDetail *detail = [LookinDisplayItemDetail new];
         detail.displayItemOid = oid;
         
-#if TARGET_OS_OSX
         id object = [NSObject lks_objectWithOid:oid];
+#if TARGET_OS_OSX
         NSView *view = object;
         if (view && [view isKindOfClass:[NSView class]] && !view.layer) {
             if (idx == 0) {

@@ -167,7 +167,7 @@ static NSString * const CodingKey_DeviceType = @"8";
     }
     
 #if TARGET_OS_IPHONE
-    info.osDescription = [UIDevice currentDevice].systemVersion;
+    info.osDescription = [NSString stringWithFormat:@"iOS %@", [UIDevice currentDevice].systemVersion];
     NSString *mainVersionStr = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."].firstObject;
     info.osMainVersion = [mainVersionStr integerValue];
 #elif TARGET_OS_OSX
@@ -245,29 +245,11 @@ static NSString * const CodingKey_DeviceType = @"8";
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 #elif TARGET_OS_OSX
-    NSView *view = window.contentView.superview;
-    if (!window || !view) {
+    if (!window) {
         return nil;
     }
-    
-    NSRect rect = view.bounds;
-    rect = [view convertRect:rect toView:nil];
-    rect = [window convertRectToScreen:rect];
-    
-// Adjust for titlebar; kTitleUtility = 16, kTitleNormal = 22
-#define kTitleUtility 16
-#define kTitleNormal 22
-    
-    CGFloat delta = ([window styleMask] & NSWindowStyleMaskUtilityWindow) ? kTitleUtility : kTitleNormal;
-    rect.origin.y += delta;
-    rect.size.height += delta * 2;
-    
-    CGImageRef cgImage = CGWindowListCreateImage(rect,
-                                                 kCGWindowListOptionIncludingWindow,
-                                                 (CGWindowID)[window windowNumber],
-                                                 kCGWindowImageBestResolution);
-    
-    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:rect.size];
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectZero, kCGWindowListOptionIncludingWindow, (int)window.windowNumber, kCGWindowImageBoundsIgnoreFraming);
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:window.frame.size];
     CGImageRelease(cgImage);
 #endif
     

@@ -15,6 +15,7 @@
 #import "LookinAppInfo.h"
 #import "LookinServerDefines.h"
 #import "LKS_MultiplatformAdapter.h"
+#import "LookinHierarchyInfo+LookinServer.h"
 
 #if TARGET_OS_IPHONE
 @interface LKS_ExportManagerMaskView : UIView

@@ -43,7 +43,7 @@
 }
 
 + (CGRect)mainScreenBounds {
-#if TARGET_OS_VISION
+#if TARGET_OS_VISION || TARGET_OS_MACCATALYST
     return [LKS_MultiplatformAdapter getFirstActiveWindowScene].coordinateSpace.bounds;
 #elif TARGET_OS_IPHONE
     return [UIScreen mainScreen].bounds;
@@ -67,7 +67,7 @@
 #endif
 }
 
-#if TARGET_OS_VISION
+#if TARGET_OS_VISION || TARGET_OS_MACCATALYST
 + (UIWindowScene *)getFirstActiveWindowScene {
     for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
         if (![scene isKindOfClass:UIWindowScene.class]) {
