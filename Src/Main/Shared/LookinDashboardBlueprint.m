@@ -300,7 +300,10 @@
             LookinAttrSec_ViewLayer_Visibility: @[LookinAttr_ViewLayer_Visibility_Hidden,
                                                   LookinAttr_ViewLayer_Visibility_Opacity],
             
-            LookinAttrSec_ViewLayer_InterationAndMasks: @[LookinAttr_ViewLayer_InterationAndMasks_Interaction,
+            LookinAttrSec_ViewLayer_InterationAndMasks:@[
+#if TARGET_OS_IPHONE
+            LookinAttr_ViewLayer_InterationAndMasks_Interaction,
+#endif
                                                           LookinAttr_ViewLayer_InterationAndMasks_MasksToBounds],
             
             LookinAttrSec_ViewLayer_Corner: @[LookinAttr_ViewLayer_Corner_Radius],
