@@ -239,7 +239,6 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Distribution;
 extern LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Alignment;
 extern LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Spacing;
 
-#endif
 
 #pragma mark - Attr
 
