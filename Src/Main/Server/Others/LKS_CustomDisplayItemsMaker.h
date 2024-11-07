@@ -7,6 +7,8 @@
 //  Created by likai.123 on 2023/11/1.
 //
 
+#import <Foundation/Foundation.h>
+
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif

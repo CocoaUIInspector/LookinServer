@@ -12,7 +12,7 @@
 #if TARGET_OS_IPHONE
 
 #elif TARGET_OS_MAC
-
+#import <AppKit/AppKit.h>
 @interface NSColor (Lookin)
 
 + (instancetype)lookin_colorFromRGBAComponents:(NSArray<NSNumber *> *)components;

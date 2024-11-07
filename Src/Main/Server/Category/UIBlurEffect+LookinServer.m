@@ -8,11 +8,11 @@
 //  https://lookin.work
 //
 
-#if TARGET_OS_IPHONE
-
 #import "UIBlurEffect+LookinServer.h"
 #import "NSObject+Lookin.h"
 #import <objc/runtime.h>
+
+#if TARGET_OS_IPHONE
 
 @implementation UIBlurEffect (LookinServer)
 

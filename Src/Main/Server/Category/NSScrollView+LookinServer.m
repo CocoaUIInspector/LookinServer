@@ -5,8 +5,8 @@
 //  Created by JH on 2024/11/7.
 //
 
-#if TARGET_OS_OSX
 #import "NSScrollView+LookinServer.h"
+#if TARGET_OS_OSX
 
 @implementation NSScrollView (LookinServer)
 

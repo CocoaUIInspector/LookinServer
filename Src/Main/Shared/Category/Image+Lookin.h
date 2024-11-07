@@ -13,6 +13,8 @@
 
 #elif TARGET_OS_MAC
 
+#import <AppKit/AppKit.h>
+
 @interface NSImage (LookinClient)
 
 - (NSData *)lookin_data;

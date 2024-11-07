@@ -5,6 +5,8 @@
 //  Created by JH on 11/5/24.
 //
 
+#import "TargetConditionals.h"
+
 #if TARGET_OS_OSX
 
 #import <Cocoa/Cocoa.h>
