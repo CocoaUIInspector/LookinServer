@@ -18,6 +18,7 @@
 #import "UIColor+LookinServer.h"
 #import "LKS_MultiplatformAdapter.h"
 #import "NSWindow+LookinServer.h"
+
 @implementation CALayer (LookinServer)
 
 - (LookinWindow *)lks_window {
@@ -109,12 +110,12 @@
             return nil;
         }
         [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
-        
-        image = [[NSImage alloc] initWithSize:contextSize];
-        
+        image = [[NSImage alloc] initWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale)];
         [image addRepresentation:representation];
+        return image;
+        
     } else {
-        image = [NSImage imageWithSize:contextSize flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+        image = [NSImage imageWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale) flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
             CGContextRef context = NSGraphicsContext.currentContext.CGContext;
             [self renderInContext:context];
             return YES;
@@ -143,7 +144,11 @@
         // 如果算出的 renderScale 大于 1 则取 1，因为似乎用 1 渲染的速度要比一个别的奇怪的带小数点的数字要更快
         renderScale = MIN(screenScale * LookinNodeImageMaxLengthInPx / maxLength, 1);
     }
-    
+    CGSize contextSize = self.frame.size;
+    if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
+        NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
+        return nil;
+    }
     if (self.sublayers.count) {
         NSArray<CALayer *> *sublayers = [self.sublayers copy];
         NSMutableArray<CALayer *> *visibleSublayers = [NSMutableArray arrayWithCapacity:sublayers.count];
@@ -153,13 +158,6 @@
                 [visibleSublayers addObject:sublayer];
             }
         }];
-        
-        CGSize contextSize = self.frame.size;
-        if (contextSize.width <= 0 || contextSize.height <= 0 || contextSize.width > 20000 || contextSize.height > 20000) {
-            NSLog(@"LookinServer - Failed to capture screenshot. Invalid context size: %@ x %@", @(contextSize.width), @(contextSize.height));
-            return nil;
-        }
-        
 #if TARGET_OS_IPHONE
         UIGraphicsBeginImageContextWithOptions(contextSize, NO, renderScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
@@ -181,12 +179,10 @@
                 return nil;
             }
             [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
-            
-            image = [[NSImage alloc] initWithSize:contextSize];
-            
+            image = [[NSImage alloc] initWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale)];
             [image addRepresentation:representation];
         } else {
-            image = [NSImage imageWithSize:contextSize flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+            image = [NSImage imageWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale) flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
                 CGContextRef context = NSGraphicsContext.currentContext.CGContext;
                 [self renderInContext:context];
                 return YES;
