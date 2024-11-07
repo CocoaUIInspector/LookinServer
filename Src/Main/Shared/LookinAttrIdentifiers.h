@@ -23,7 +23,6 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_Layout;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_AutoLayout;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_ViewLayer;
 
-#if TARGET_OS_IPHONE
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIImageView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UILabel;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIControl;
@@ -34,9 +33,7 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UITextField;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView;
-#endif
 
-#if TARGET_OS_OSX
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSImageView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSControl;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSButton;
@@ -46,7 +43,6 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_NSTextView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSTextField;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSVisualEffectView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_NSStackView;
-#endif
 
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom;
 
@@ -80,8 +76,6 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_BgColor;
 extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_Border;
 extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_Shadow;
 extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_Tag;
-
-#if TARGET_OS_IPHONE
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_ContentMode;
 extern LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_TintColor;
@@ -149,9 +143,6 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis;
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution;
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Alignment;
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Spacing;
-#endif
-
-#if TARGET_OS_OSX
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_NSImageView_Name;
 extern LookinAttrSectionIdentifier const LookinAttrSec_NSImageView_Open;
@@ -294,8 +285,6 @@ extern LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Color;
 extern LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Mode;
 extern LookinAttrIdentifier const LookinAttr_ViewLayer_Tag_Tag;
 
-#if TARGET_OS_IPHONE
-
 extern LookinAttrIdentifier const LookinAttr_UIImageView_Name_Name;
 extern LookinAttrIdentifier const LookinAttr_UIImageView_Open_Open;
 
@@ -373,9 +362,6 @@ extern LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis;
 extern LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution;
 extern LookinAttrIdentifier const LookinAttr_UIStackView_Alignment_Alignment;
 extern LookinAttrIdentifier const LookinAttr_UIStackView_Spacing_Spacing;
-#endif
-
-#if TARGET_OS_OSX
 
 extern LookinAttrIdentifier const LookinAttr_NSImageView_Name_Name;
 extern LookinAttrIdentifier const LookinAttr_NSImageView_Open_Open;
@@ -502,6 +488,5 @@ extern LookinAttrIdentifier const LookinAttr_NSStackView_DetachesHiddenViews_Det
 extern LookinAttrIdentifier const LookinAttr_NSStackView_Distribution_Distribution;
 extern LookinAttrIdentifier const LookinAttr_NSStackView_Alignment_Alignment;
 extern LookinAttrIdentifier const LookinAttr_NSStackView_Spacing_Spacing;
-#endif
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

@@ -23,7 +23,7 @@ LookinAttrGroupIdentifier const LookinAttrGroup_Relation = @"r";
 LookinAttrGroupIdentifier const LookinAttrGroup_Layout = @"l";
 LookinAttrGroupIdentifier const LookinAttrGroup_AutoLayout = @"a";
 LookinAttrGroupIdentifier const LookinAttrGroup_ViewLayer = @"vl";
-#if TARGET_OS_IPHONE
+
 LookinAttrGroupIdentifier const LookinAttrGroup_UIImageView = @"i";
 LookinAttrGroupIdentifier const LookinAttrGroup_UILabel = @"la";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIControl = @"co";
@@ -34,10 +34,9 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UITextView = @"te";
 LookinAttrGroupIdentifier const LookinAttrGroup_UITextField = @"tf";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView = @"ve";
 LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView = @"UIStackView";
-#endif
 
-#if TARGET_OS_OSX
-#if TARGET_OS_OSX
+
+
 LookinAttrGroupIdentifier const LookinAttrGroup_NSImageView = @"NSImageView";
 LookinAttrGroupIdentifier const LookinAttrGroup_NSControl = @"NSControl";
 LookinAttrGroupIdentifier const LookinAttrGroup_NSButton = @"NSButton";
@@ -47,9 +46,7 @@ LookinAttrGroupIdentifier const LookinAttrGroup_NSTextView = @"NSTextView";
 LookinAttrGroupIdentifier const LookinAttrGroup_NSTextField = @"NSTextField";
 LookinAttrGroupIdentifier const LookinAttrGroup_NSVisualEffectView = @"NSVisualEffectView";
 LookinAttrGroupIdentifier const LookinAttrGroup_NSStackView = @"NSStackView";
-#endif
 
-#endif
 
 LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom = @"guc"; // user custom
 
@@ -84,7 +81,7 @@ LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_ContentMode = @"v_co";
 LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_TintColor = @"v_t";
 LookinAttrSectionIdentifier const LookinAttrSec_ViewLayer_Tag = @"v_ta";
 
-#if TARGET_OS_IPHONE
+
 
 LookinAttrSectionIdentifier const LookinAttrSec_UIImageView_Name = @"i_n";
 LookinAttrSectionIdentifier const LookinAttrSec_UIImageView_Open = @"i_o";
@@ -149,9 +146,7 @@ LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis = @"usv_axis";
 LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution = @"usv_dis";
 LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Alignment = @"usv_align";
 LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Spacing = @"usv_spa";
-#endif
 
-#if TARGET_OS_OSX
 LookinAttrSectionIdentifier const LookinAttrSec_NSImageView_Name = @"NSImageView_Name";
 LookinAttrSectionIdentifier const LookinAttrSec_NSImageView_Open = @"NSImageView_Open";
 LookinAttrSectionIdentifier const LookinAttrSec_NSControl_State = @"NSControl_State";
@@ -236,7 +231,6 @@ LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_DetachesHiddenViews 
 LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Distribution = @"NSStackView_Distribution";
 LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Alignment = @"NSStackView_Alignment";
 LookinAttrSectionIdentifier const LookinAttrSec_NSStackView_Spacing = @"NSStackView_Spacing";
-#endif
 
 #pragma mark - Attr
 
@@ -278,8 +272,6 @@ LookinAttrIdentifier const LookinAttr_ViewLayer_ContentMode_Mode = @"vl_c_m";
 LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Color = @"vl_t_c";
 LookinAttrIdentifier const LookinAttr_ViewLayer_TintColor_Mode = @"vl_t_m";
 LookinAttrIdentifier const LookinAttr_ViewLayer_Tag_Tag = @"vl_t_t";
-
-#if TARGET_OS_IPHONE
 
 LookinAttrIdentifier const LookinAttr_UIImageView_Name_Name = @"iv_n_n";
 LookinAttrIdentifier const LookinAttr_UIImageView_Open_Open = @"iv_o_o";
@@ -358,9 +350,7 @@ LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis = @"usv_axis_axis";
 LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution = @"usv_dis_dis";
 LookinAttrIdentifier const LookinAttr_UIStackView_Alignment_Alignment = @"usv_ali_ali";
 LookinAttrIdentifier const LookinAttr_UIStackView_Spacing_Spacing = @"usv_spa_spa";
-#endif
 
-#if TARGET_OS_OSX
 LookinAttrIdentifier const LookinAttr_NSImageView_Name_Name = @"NSImageView_Name_Name";
 LookinAttrIdentifier const LookinAttr_NSImageView_Open_Open = @"NSImageView_Open_Open";
 LookinAttrIdentifier const LookinAttr_NSControl_State_Enabled = @"NSControl_State_Enabled";
@@ -484,7 +474,6 @@ LookinAttrIdentifier const LookinAttr_NSStackView_DetachesHiddenViews_DetachesHi
 LookinAttrIdentifier const LookinAttr_NSStackView_Distribution_Distribution = @"NSStackView_Distribution_Distribution";
 LookinAttrIdentifier const LookinAttr_NSStackView_Alignment_Alignment = @"NSStackView_Alignment_Alignment";
 LookinAttrIdentifier const LookinAttr_NSStackView_Spacing_Spacing = @"NSStackView_Spacing_Spacing";
-#endif
 
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
