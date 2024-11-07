@@ -150,7 +150,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
     if (type == LookinCodingValueTypeColor) {
         if ([self isKindOfClass:[LookinColor class]]) {
             CGFloat r, g, b, a;
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
             CGFloat white;
             if ([(UIColor *)self getRed:&r green:&g blue:&b alpha:&a]) {
                 // valid
@@ -178,7 +178,7 @@ static char kAssociatedObjectKey_LookinAllBindObjects;
         }
         
     } else if (type == LookinCodingValueTypeImage) {
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
         if ([self isKindOfClass:[UIImage class]]) {
             UIImage *image = (UIImage *)self;
             return UIImagePNGRepresentation(image);
