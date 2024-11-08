@@ -2387,12 +2387,33 @@
     return className;
 }
 
++ (BOOL)isWindowPropertyWithAttrID:(LookinAttrIdentifier)attrID {
+    NSString *className = [self classNameWithAttrID:attrID];
+    if ([className isEqualToString:@"UIWindowScene"]) {
+        return YES;
+    }
+    
+    if ([className isEqualToString:@"NSWindow"]) {
+        return YES;
+    }
+    return NO;
+}
+
 + (BOOL)isUIViewPropertyWithAttrID:(LookinAttrIdentifier)attrID {
     NSString *className = [self classNameWithAttrID:attrID];
     
     if ([className isEqualToString:@"CALayer"]) {
         return NO;
     }
+    
+    if ([className isEqualToString:@"UIWindowScene"]) {
+        return NO;
+    }
+    
+    if ([className isEqualToString:@"NSWindow"]) {
+        return NO;
+    }
+    
     return YES;
 }
 

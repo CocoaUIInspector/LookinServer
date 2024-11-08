@@ -36,11 +36,17 @@
         LookinDisplayItem *item = [self _displayItemWithLayer:window.layer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter];
 #elif TARGET_OS_OSX
         CALayer *rootLayer = window.lks_rootView.layer;
-        LookinDisplayItem *item = nil;
+        LookinDisplayItem *item = [LookinDisplayItem new];
+        item.windowObject = [LookinObject instanceWithObject:window];
+        item.frame = window.frame;
+        item.bounds = window.frame;
+        item.backgroundColor = window.backgroundColor;
+        item.shouldCaptureImage = YES;
+        item.alpha = window.alphaValue;
         if (rootLayer) {
-            item = [self _displayItemWithLayer:rootLayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter];
+            item.subitems = @[[self _displayItemWithLayer:rootLayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter]];
         } else {
-            item = [self _displayItemWithView:window.lks_rootView screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter];
+            item.subitems = @[[self _displayItemWithView:window.lks_rootView screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter]];
         }
 #endif
         item.representedAsKeyWindow = window.isKeyWindow;

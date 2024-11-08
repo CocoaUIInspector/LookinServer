@@ -75,7 +75,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 
 @property(nonatomic, assign) CGRect bounds;
 
-/// iOS 总是为 NO
+/// 只在 macOS 上有效， iOS 总是为 NO
 @property(nonatomic, assign, getter=isFlipped) BOOL flipped;
 
 /// 不存在 subitems 时，该属性的值为 nil
@@ -83,6 +83,7 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 无论是否存在 subitems，该属性始终存在
 @property(nonatomic, strong) LookinImage *groupScreenshot;
 
+@property(nonatomic, strong) LookinObject *windowObject;
 @property(nonatomic, strong) LookinObject *viewObject;
 @property(nonatomic, strong) LookinObject *layerObject;
 @property(nonatomic, strong) LookinObject *hostViewControllerObject;
