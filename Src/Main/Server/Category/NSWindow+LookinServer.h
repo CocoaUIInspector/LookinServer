@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 // NSWindow 的 rootView 是 contentView 的 superview，例如 NSThemeFrame
 @property (nonatomic, readonly) NSView *lks_rootView;
 
+- (NSImage *)lks_snapshotImage;
+
+- (CGRect)lks_bounds;
+
 @end
 
 NS_ASSUME_NONNULL_END

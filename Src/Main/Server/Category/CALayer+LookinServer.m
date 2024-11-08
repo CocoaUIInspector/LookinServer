@@ -47,7 +47,6 @@
     CGRect rectInSelfWindow = [selfWindow.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window convertRect:rectInSelfWindow fromWindow:selfWindow];
 #elif TARGET_OS_OSX
-    
     CGRect rectInSelfWindow = [selfWindow.lks_rootView.layer convertRect:self.frame fromLayer:self.superlayer];
     CGRect rectInWindow = [window.lks_rootView convertRect:rectInSelfWindow fromView:selfWindow.lks_rootView];
 #endif

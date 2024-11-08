@@ -38,11 +38,14 @@
         CALayer *rootLayer = window.lks_rootView.layer;
         LookinDisplayItem *item = [LookinDisplayItem new];
         item.windowObject = [LookinObject instanceWithObject:window];
-        item.frame = window.frame;
-        item.bounds = window.frame;
+        item.frame = window.lks_bounds;
+        item.bounds = window.lks_bounds;
         item.backgroundColor = window.backgroundColor;
         item.shouldCaptureImage = YES;
         item.alpha = window.alphaValue;
+        item.groupScreenshot = [rootLayer lks_groupScreenshotWithLowQuality:lowQuality];
+        item.soloScreenshot = [rootLayer lks_soloScreenshotWithLowQuality:lowQuality];
+        item.screenshotEncodeType = LookinDisplayItemImageEncodeTypeNSData;
         if (rootLayer) {
             item.subitems = @[[self _displayItemWithLayer:rootLayer screenshots:hasScreenshots attrList:hasAttrList lowImageQuality:lowQuality readCustomInfo:readCustomInfo saveCustomSetter:saveCustomSetter]];
         } else {

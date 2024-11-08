@@ -49,7 +49,9 @@
     return [UIScreen mainScreen].bounds;
 #elif TARGET_OS_OSX
     // 这里不能返回屏幕的bounds，因为在macOS上，窗口可以不全屏显示，Lookin的设计是基于窗口的，一般iOS中屏幕的bounds就是窗口的bounds，所以这里直接返回窗口的bounds
-    return NSApplication.sharedApplication.windows.firstObject.contentView.bounds;
+    CGRect frame = NSApplication.sharedApplication.windows.firstObject.frame;
+    frame.origin = CGPointZero;
+    return frame;
 #else
     return CGRectZero;
 #endif
