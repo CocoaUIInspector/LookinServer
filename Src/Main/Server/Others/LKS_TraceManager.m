@@ -183,6 +183,38 @@
         UITableViewHeaderFooterView *headerFooterView = (UITableViewHeaderFooterView *)view;
         headerFooterView.textLabel.lks_specialTrace = @"sectionHeaderFooter.textLabel";
         headerFooterView.detailTextLabel.lks_specialTrace = @"sectionHeaderFooter.detailTextLabel";
+#elif TARGET_OS_OSX
+    } else if ([view isKindOfClass:[NSTableView class]]) {
+        NSTableView *tableView = (NSTableView *)view;
+        tableView.headerView.lks_specialTrace = @"tableView.headerView";
+        NSRect visibleRect = tableView.visibleRect;
+        NSIndexSet *visibleRowIndexes = [NSIndexSet indexSetWithIndexesInRange:[tableView rowsInRect:visibleRect]];
+        [visibleRowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL * _Nonnull stop) {
+            NSTableRowView *rowView = [tableView rowViewAtRow:row makeIfNecessary:NO];
+            NSInteger level = NSNotFound;
+            if ([tableView isKindOfClass:[NSOutlineView class]]) {
+                NSOutlineView *outlineView = (NSOutlineView *)tableView;
+                level = [outlineView levelForRow:row];
+            }
+            
+            if (level != NSNotFound) {
+                rowView.lks_specialTrace = [NSString stringWithFormat:@"{ level: %@, row: %@ }", @(level), @(row)];
+            } else {
+                rowView.lks_specialTrace = [NSString stringWithFormat:@"{ row: %@ }", @(row)];
+            }
+            
+            NSInteger numberOfColumns = [tableView numberOfColumns];
+            for (NSInteger column = 0; column < numberOfColumns; column++) {
+                NSView *cellView = [rowView viewAtColumn:column];
+                if (cellView && [cellView isKindOfClass:[NSView class]]) {
+                    if (level != NSNotFound) {
+                        cellView.lks_specialTrace = [NSString stringWithFormat:@"{ level: %@, row: %@, column: %@ }", @(level), @(row), @(column)];
+                    } else {
+                        cellView.lks_specialTrace = [NSString stringWithFormat:@"{ row: %@, column: %@ }", @(row), @(column)];
+                    }
+                }
+            }
+        }];
 #endif
     } else if ([view isKindOfClass:[LookinCollectionView class]]) {
         LookinCollectionView *collectionView = (LookinCollectionView *)view;
@@ -325,13 +357,13 @@ static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
         
         [set addObject:({
             LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"UIView";
+            trace.hostClassName = LookinViewString;
             trace.ivarName = @"_window";
             trace;
         })];
         [set addObject:({
             LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"UIViewController";
+            trace.hostClassName = LookinViewControllerString;
             trace.ivarName = @"_view";
             trace;
         })];
@@ -343,32 +375,7 @@ static NSSet<LookinIvarTrace *> *LKS_InvalidIvarTraces(void) {
         })];
         [set addObject:({
             LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"UIViewController";
-            trace.ivarName = @"_parentViewController";
-            trace;
-        })];
-        
-        [set addObject:({
-            LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"NSView";
-            trace.ivarName = @"_window";
-            trace;
-        })];
-        [set addObject:({
-            LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"NSViewController";
-            trace.ivarName = @"_view";
-            trace;
-        })];
-        [set addObject:({
-            LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"NSView";
-            trace.ivarName = @"_viewDelegate";
-            trace;
-        })];
-        [set addObject:({
-            LookinIvarTrace *trace = [LookinIvarTrace new];
-            trace.hostClassName = @"NSViewController";
+            trace.hostClassName = LookinViewControllerString;
             trace.ivarName = @"_parentViewController";
             trace;
         })];

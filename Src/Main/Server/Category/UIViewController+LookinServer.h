@@ -8,16 +8,6 @@
 //  https://lookin.work
 //
 
-#import "TargetConditionals.h"
-
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#endif
-
-#if TARGET_OS_OSX
-#import <AppKit/AppKit.h>
-#endif
-
 #import "LookinDefines.h"
 
 @interface LookinViewController (LookinServer)

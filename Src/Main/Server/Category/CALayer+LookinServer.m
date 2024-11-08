@@ -110,16 +110,16 @@
             return nil;
         }
         [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
-        image = [[NSImage alloc] initWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale)];
+        image = [[NSImage alloc] initWithSize:representation.size];
         [image addRepresentation:representation];
         return image;
         
     } else {
-        image = [NSImage imageWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale) flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
-            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
-            [self renderInContext:context];
-            return YES;
-        }];
+        image = [[NSImage alloc] initWithSize:contextSize];
+        [image lockFocusFlipped:self.isGeometryFlipped];
+        CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+        [self renderInContext:context];
+        [image unlockFocus];
     }
     return image;
 #endif
@@ -179,14 +179,14 @@
                 return nil;
             }
             [view cacheDisplayInRect:view.bounds toBitmapImageRep:representation];
-            image = [[NSImage alloc] initWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale)];
+            image = [[NSImage alloc] initWithSize:representation.size];
             [image addRepresentation:representation];
         } else {
-            image = [NSImage imageWithSize:CGSizeMake(contextSize.width / renderScale, contextSize.height / renderScale) flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
-                CGContextRef context = NSGraphicsContext.currentContext.CGContext;
-                [self renderInContext:context];
-                return YES;
-            }];
+            image = [[NSImage alloc] initWithSize:contextSize];
+            [image lockFocusFlipped:self.isGeometryFlipped];
+            CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+            [self renderInContext:context];
+            [image unlockFocus];
         }
 #endif
         [visibleSublayers enumerateObjectsUsingBlock:^(CALayer * _Nonnull sublayer, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -198,31 +198,17 @@
 }
 
 - (NSArray<NSArray<NSString *> *> *)lks_relatedClassChainList {
-#if TARGET_OS_IPHONE
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
     if (self.lks_hostView) {
-        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"UIView"]];
-        UIViewController* vc = [self.lks_hostView lks_findHostViewController];
-        if (vc) {
-            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:@"UIViewController"]];
-        }
-    } else {
-        [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
-    }
-    return array.copy;
-#elif TARGET_OS_OSX
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
-    if (self.lks_hostView) {
-        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:@"NSView"]];
+        [array addObject:[CALayer lks_getClassListOfObject:self.lks_hostView endingClass:LookinViewString]];
         NSViewController* vc = [self.lks_hostView lks_findHostViewController];
         if (vc) {
-            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:@"NSViewController"]];
+            [array addObject:[CALayer lks_getClassListOfObject:vc endingClass:LookinViewControllerString]];
         }
     } else {
         [array addObject:[CALayer lks_getClassListOfObject:self endingClass:@"CALayer"]];
     }
     return array.copy;
-#endif
 }
 
 + (NSArray<NSString *> *)lks_getClassListOfObject:(id)object endingClass:(NSString *)endingClass {

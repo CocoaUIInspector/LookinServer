@@ -287,7 +287,7 @@
     }
     [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
     
-    NSImage *image = [[NSImage alloc] initWithSize:contextSize];
+    NSImage *image = [[NSImage alloc] initWithSize:rep.size];
     
     [image addRepresentation:rep];
     
@@ -336,7 +336,7 @@
         }
         [self cacheDisplayInRect:self.bounds toBitmapImageRep:rep];
         
-        NSImage *image = [[NSImage alloc] initWithSize:contextSize];
+        NSImage *image = [[NSImage alloc] initWithSize:rep.size];
         
         [image addRepresentation:rep];
         [visibleSubviews enumerateObjectsUsingBlock:^(NSView * _Nonnull subview, NSUInteger idx, BOOL * _Nonnull stop) {

@@ -161,6 +161,8 @@ enum {
 #define LookinCollectionElementKindSectionFooter UICollectionElementKindSectionFooter
 #define LookinTextField UITextField
 #define LookinTextView UITextView
+#define LookinViewString @"UIView"
+#define LookinViewControllerString @"UIViewController"
 #elif TARGET_OS_OSX
 #define LookinColor NSColor
 #define LookinInsets NSEdgeInsets
@@ -182,6 +184,8 @@ enum {
 #define LookinCollectionElementKindSectionFooter NSCollectionElementKindSectionFooter
 #define LookinTextField NSTextField
 #define LookinTextView NSTextView
+#define LookinViewString @"NSView"
+#define LookinViewControllerString @"NSViewController"
 #endif
 
 #define LookinColorRGBAMake(r, g, b, a) [LookinColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]

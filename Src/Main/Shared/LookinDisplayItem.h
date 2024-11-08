@@ -14,7 +14,7 @@
 #import "LookinCustomDisplayItemInfo.h"
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
 #import <Appkit/Appkit.h>
 #endif
 
@@ -74,6 +74,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 @property(nonatomic, assign) CGRect frame;
 
 @property(nonatomic, assign) CGRect bounds;
+
+/// iOS 总是为 NO
+@property(nonatomic, assign, getter=isFlipped) BOOL flipped;
 
 /// 不存在 subitems 时，该属性的值为 nil
 @property(nonatomic, strong) LookinImage *soloScreenshot;

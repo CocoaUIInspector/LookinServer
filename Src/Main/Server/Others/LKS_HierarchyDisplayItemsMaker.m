@@ -92,6 +92,9 @@
     
     LookinView *view = layer.lks_hostView;
     if (view) {
+#if TARGET_OS_OSX
+        item.flipped = view.isFlipped;
+#endif
         item.viewObject = [LookinObject instanceWithObject:view];
         item.eventHandlers = [LKS_EventHandlerMaker makeForView:view];
         item.backgroundColor = [view valueForKeyPath:@"backgroundColor"];
@@ -101,6 +104,9 @@
             item.hostViewControllerObject = [LookinObject instanceWithObject:vc];
         }
     } else {
+#if TARGET_OS_OSX
+        item.flipped = layer.isGeometryFlipped;
+#endif
         item.backgroundColor = [LookinColor lks_colorWithCGColor:layer.backgroundColor];
     }
     
@@ -172,6 +178,7 @@
         item.frame = CGRectZero;
     }
     item.bounds = view.bounds;
+    item.flipped = view.isFlipped;
     if (hasScreenshots) {
         item.soloScreenshot = [view lks_soloScreenshotWithLowQuality:lowQuality];
         item.groupScreenshot = [view lks_groupScreenshotWithLowQuality:lowQuality];

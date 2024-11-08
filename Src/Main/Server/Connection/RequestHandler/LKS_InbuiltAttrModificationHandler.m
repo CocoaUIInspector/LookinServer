@@ -221,6 +221,7 @@
         detail.boundsValue = [NSValue valueWithCGRect:layer.bounds];
         detail.hiddenValue = [NSNumber numberWithBool:layer.isHidden];
         detail.alphaValue = @(layer.opacity);
+        
         completion(detail, error);
     });
 }

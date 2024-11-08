@@ -17,7 +17,6 @@
 
 + (nullable LookinViewController *)lks_visibleViewController {
 #if TARGET_OS_IPHONE
-    
     LookinViewController *rootViewController = [LKS_MultiplatformAdapter keyWindow].rootViewController;
     LookinViewController *visibleViewController = [rootViewController lks_visibleViewControllerIfExist];
     return visibleViewController;

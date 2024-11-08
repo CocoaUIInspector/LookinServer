@@ -9,9 +9,9 @@
 
 #import "Image+Lookin.h"
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
 #import <AppKit/AppKit.h>
 @implementation NSColor (Lookin)
 

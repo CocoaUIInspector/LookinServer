@@ -101,7 +101,7 @@
 #endif
     
 #if TARGET_OS_OSX
-    return self.TIFFRepresentation;
+    return [NSBitmapImageRep representationOfImageRepsInArray:self.representations usingType:(NSBitmapImageFileTypePNG) properties:@{}];;
 #endif
 }
 

@@ -11,7 +11,7 @@
 #import "LookinDisplayItemDetail.h"
 #import "Image+Lookin.h"
 
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
 #import "UIImage+LookinServer.h"
 #endif
 
@@ -19,16 +19,8 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.displayItemOid) forKey:@"displayItemOid"];
-#if TARGET_OS_IPHONE
     [aCoder encodeObject:self.groupScreenshot.lookin_data forKey:@"groupScreenshot"];
     [aCoder encodeObject:self.soloScreenshot.lookin_data forKey:@"soloScreenshot"];
-#endif
-#if TARGET_OS_OSX
-    
-    
-    [aCoder encodeObject:[NSKeyedArchiver archivedDataWithRootObject:self.groupScreenshot requiringSecureCoding:YES error:nil] forKey:@"groupScreenshot"];
-    [aCoder encodeObject:[NSKeyedArchiver archivedDataWithRootObject:self.soloScreenshot requiringSecureCoding:YES error:nil] forKey:@"soloScreenshot"];
-#endif
     [aCoder encodeObject:self.frameValue forKey:@"frameValue"];
     [aCoder encodeObject:self.boundsValue forKey:@"boundsValue"];
     [aCoder encodeObject:self.hiddenValue forKey:@"hiddenValue"];
@@ -46,14 +38,8 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.displayItemOid = [[aDecoder decodeObjectForKey:@"displayItemOid"] unsignedLongValue];
-#if TARGET_OS_IPHONE
         self.groupScreenshot = [[LookinImage alloc] initWithData:[aDecoder decodeObjectForKey:@"groupScreenshot"]];
         self.soloScreenshot = [[LookinImage alloc] initWithData:[aDecoder decodeObjectForKey:@"soloScreenshot"]];
-#endif
-#if TARGET_OS_OSX
-        self.groupScreenshot = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSImage class] fromData:[aDecoder decodeObjectForKey:@"groupScreenshot"] error:nil];
-        self.soloScreenshot = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSImage class] fromData:[aDecoder decodeObjectForKey:@"soloScreenshot"] error:nil];
-#endif
         self.frameValue = [aDecoder decodeObjectForKey:@"frameValue"];
         self.boundsValue = [aDecoder decodeObjectForKey:@"boundsValue"];
         self.hiddenValue = [aDecoder decodeObjectForKey:@"hiddenValue"];

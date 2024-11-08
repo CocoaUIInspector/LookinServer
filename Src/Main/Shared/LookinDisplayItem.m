@@ -22,7 +22,7 @@
 #if TARGET_OS_IPHONE
 #import "UIColor+LookinServer.h"
 #import "UIImage+LookinServer.h"
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
 #endif
 
 @interface LookinDisplayItem ()
@@ -50,6 +50,9 @@
     newDisplayItem.alpha = self.alpha;
     newDisplayItem.frame = self.frame;
     newDisplayItem.bounds = self.bounds;
+#if TARGET_OS_OSX
+    newDisplayItem.flipped = self.isFlipped;
+#endif
     newDisplayItem.soloScreenshot = self.soloScreenshot;
     newDisplayItem.groupScreenshot = self.groupScreenshot;
     newDisplayItem.viewObject = self.viewObject.copy;
@@ -78,6 +81,9 @@
     [aCoder encodeObject:self.subitems forKey:@"subitems"];
     [aCoder encodeBool:self.isHidden forKey:@"hidden"];
     [aCoder encodeFloat:self.alpha forKey:@"alpha"];
+#if TARGET_OS_OSX
+    [aCoder encodeBool:self.isFlipped forKey:@"isFlipped"];
+#endif
     [aCoder encodeObject:self.viewObject forKey:@"viewObject"];
     [aCoder encodeObject:self.layerObject forKey:@"layerObject"];
     [aCoder encodeObject:self.hostViewControllerObject forKey:@"hostViewControllerObject"];
@@ -95,12 +101,11 @@
     }
     [aCoder encodeObject:self.customDisplayTitle forKey:@"customDisplayTitle"];
     [aCoder encodeObject:self.danceuiSource forKey:@"danceuiSource"];
-#if TARGET_OS_IPHONE || TARGET_OS_MACCATALYST
+#if TARGET_OS_IPHONE
     [aCoder encodeCGRect:self.frame forKey:@"frame"];
     [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
     [aCoder encodeObject:self.backgroundColor.lks_rgbaComponents forKey:@"backgroundColor"];
-    
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     [aCoder encodeRect:self.frame forKey:@"frame"];
     [aCoder encodeRect:self.bounds forKey:@"bounds"];
     [aCoder encodeObject:self.backgroundColor.lookin_rgbaComponents forKey:@"backgroundColor"];
@@ -113,6 +118,9 @@
         self.subitems = [aDecoder decodeObjectForKey:@"subitems"];
         self.isHidden = [aDecoder decodeBoolForKey:@"hidden"];
         self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
+#if TARGET_OS_OSX
+        self.flipped = [aDecoder decodeBoolForKey:@"isFlipped"];
+#endif
         self.viewObject = [aDecoder decodeObjectForKey:@"viewObject"];
         self.layerObject = [aDecoder decodeObjectForKey:@"layerObject"];
         self.hostViewControllerObject = [aDecoder decodeObjectForKey:@"hostViewControllerObject"];
@@ -151,7 +159,7 @@
         self.frame = [aDecoder decodeCGRectForKey:@"frame"];
         self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
         self.backgroundColor = [UIColor lks_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
         self.frame = [aDecoder decodeRectForKey:@"frame"];
         self.bounds = [aDecoder decodeRectForKey:@"bounds"];
         self.backgroundColor = [NSColor lookin_colorFromRGBAComponents:[aDecoder decodeObjectForKey:@"backgroundColor"]];
@@ -444,6 +452,15 @@
 //{
 //    NSLog(@"moss dealloc -%@", self);
 //}
+
+
+#if TARGET_OS_IPHONE
+- (void)setFlipped:(BOOL)flipped {}
+
+- (BOOL)isFlipped {
+    return NO;
+}
+#endif
 
 @end
 

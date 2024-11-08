@@ -9,14 +9,6 @@
 //
 
 #import "LookinDefines.h"
-#import "TargetConditionals.h"
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#endif
-
-#if TARGET_OS_OSX
-#import <AppKit/AppKit.h>
-#endif
 
 @interface CALayer (LookinServer)
 
