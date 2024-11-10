@@ -1733,7 +1733,7 @@
             LookinAttr_NSControl_Alignment_Alignment: @{
                 @"className": @"NSControl",
                 @"fullTitle": @"Alignment",
-                @"enumList": @"NSTextAlignment",
+                @"enumList": @"NSTextAlignment_AppKit",
                 @"patch": @(YES)
             },
             LookinAttr_NSControl_Misc_WritingDirection: @{
@@ -2200,7 +2200,7 @@
             LookinAttr_NSTextView_Alignment_Alignment: @{
                 @"className": @"NSTextView",
                 @"fullTitle": @"Alignment",
-                @"enumList": @"NSTextAlignment",
+                @"enumList": @"NSTextAlignment_AppKit",
                 @"patch": @(YES)
             },
             LookinAttr_NSTextView_ContainerInset_Inset: @{
